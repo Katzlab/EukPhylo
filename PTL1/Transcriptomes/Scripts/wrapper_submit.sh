@@ -7,29 +7,9 @@
 ## here: https://github.com/Katzlab/EukPhylo/wiki/EukPhylo-Part-1:-GF-assignment
 
 
-## Slurm specific code
-
-#SBATCH --job-name=EukPhylo
-#SBATCH --output=EukPhylo.%j.out # Stdout (%j expands to jobId)
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --ntasks-per-node=1 # #change to number of srun when running multiple instances
-#SBATCH --mem=160G
-
-module purge       #Cleans up any loaded modules
-module load slurm
-module load tqdm/4.62.3-GCCcore-11.2.0
-module load Biopython/1.79-foss-2021b
-module load BLAST+/2.12.0-gompi-2021b
-module load DIAMOND/2.0.13-GCC-11.2.0
-module load VSEARCH/2.22.1-GCC-11.3.0
-
-parent='/Your/Home/Folder'
 
 ## Example commands
 
 # A simple run that goes from script 1 to script 7 (the last script) using the Universal genetic code
-srun -D ${parent}Scripts python3 ${parent}Scripts/wrapper.py --first_script 1 --last_script 7 --assembled_transcripts ${parent}AssembledTranscripts --genetic_code ${parent}Gcode.txt --databases ${parent}Databases > log.out
+python3 Scripts/wrapper.py --first_script 1 --last_script 7 --assembled_transcripts AssembledTranscripts --genetic_code Gcode.txt --databases Databases > log.out
 
-# Including the cross-plate contamination step, using conspecific names
-srun -D ${parent} python3 ${parent}Scripts/wrapper.py --first_script 1 --last_script 7 --assembled_transcripts ${parent}AssembledTranscripts --output . --genetic_code ${parent}Gcode.txt --databases ${parent}Databases --xplate_contam --conspecific_names ${parent}Conspecific.txt > log.out
