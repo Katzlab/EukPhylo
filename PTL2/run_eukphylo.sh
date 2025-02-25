@@ -13,7 +13,7 @@ in_dir='/Input_data'
 ## EXAMPLE RUN COMMANDS BELOW
 
 # A simple run of part 2, starting from ReadyToGo files and running through tree building
-python3 ${parent}Scripts/eukphylo.py \
+python3 ${parent}/Scripts/eukphylo.py \
     --start raw \
     --end trees \
     --gf_list ${parent}listofOGs.txt \
