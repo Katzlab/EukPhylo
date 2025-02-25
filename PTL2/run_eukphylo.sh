@@ -6,7 +6,7 @@
 ## EukPhylo Wiki (https://github.com/Katzlab/EukPhylo/wiki/EukPhylo-Part-2:-MSAs,-trees,-and-contamination-loop).
 ## These run commands can also be copied and run in the terminal / command line separately, without a shell script.
 
-parent='/PhyloToL-6/PTL2'
+parent='/EukPhylo/PTL2'
 out_dir='/Output_data'
 in_dir='/Input_data'
 
