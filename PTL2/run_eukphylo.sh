@@ -6,10 +6,17 @@
 ## EukPhylo Wiki (https://github.com/Katzlab/EukPhylo/wiki/EukPhylo-Part-2:-MSAs,-trees,-and-contamination-loop).
 ## These run commands can also be copied and run in the terminal / command line separately, without a shell script.
 
-
+parent='/EukPhylo/PTL2'
+out_dir='/Output_data'
+in_dir='/Input_data'
 
 ## EXAMPLE RUN COMMANDS BELOW
 
 # A simple run of part 2, starting from ReadyToGo files and running through tree building
-python3 Scripts/eukphylo.py --start raw --end trees --gf_list listofOGs.txt --taxon_list taxon_list.txt --data Input_folder --output Output_folder > Output.out
-
+python3 ${parent}/Scripts/eukphylo.py \
+    --start raw \
+    --end trees \
+    --gf_list ${parent}listofOGs.txt \
+    --taxon_list ${parent}taxon_list.txt \
+    --data ${in_dir} \
+    --output ${out_dir} > Output.out
