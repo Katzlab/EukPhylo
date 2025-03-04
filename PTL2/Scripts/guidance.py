@@ -95,7 +95,24 @@ def run(params):
 				#remove this block later (GA)
 				#os.system('python /gridapps/software/Guidance_mid/2.1b-foss-2023a/bin/script/guidance_main.py --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
 				#Example:
-				subprocess.run('/guidance/guidance.v2.02/www/Guidance/guidance.pl --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
+				
+				cmd = [
+					'/guidance/guidance.v2.02/www/Guidance/guidance.pl',
+					'--seqFile', f'{guidance_input}/{file}',
+					'--msaProgram', 'MAFFT',
+					'--seqType', 'aa',
+					'--outDir', tax_guidance_outdir,
+					'--seqCutoff', str(params.seq_cutoff),
+					'--colCutoff', str(params.col_cutoff),
+					'--outOrder', 'as_input',
+					'--bootstraps', '10',
+					'--MSA_Param', f'\\--{mafft_alg} --maxiterate 1000 --thread {params.guidance_threads} --bl 62 --anysymbol'
+				]
+				log_file_path = f'{params.output}/Output/Intermediate/Guidance/Output/{file[:10]}/log.txt'
+				# Ensure the log directory exists 
+				os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+				with open(log_file_path, 'w') as log_file:
+					subprocess.run(cmd, stdout=log_file, stderr=subprocess.PIPE, check=True)subprocess.run('/guidance/guidance.v2.02/www/Guidance/guidance.pl --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
 
 				#Checking for a sequence score file; if not available, Guidance failed.
 				if os.path.isfile(tax_guidance_outdir + '/MSA.MAFFT.Guidance2_res_pair_seq.scr_with_Names'):
