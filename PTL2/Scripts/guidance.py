@@ -92,9 +92,10 @@ def run(params):
 
 				#Running Guidance (one per OG per iteration)
 				#for katzlab/Smith College HPC (Grid):
-				os.system('python /gridapps/software/Guidance_mid/2.1b-foss-2023a/bin/script/guidance_main.py --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
+				#remove this block later (GA)
+				#os.system('python /gridapps/software/Guidance_mid/2.1b-foss-2023a/bin/script/guidance_main.py --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
 				#Example:
-				#os.system('Scripts/guidance.v2.02/www/Guidance/guidance.pl --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
+				os.system('/guidance/guidance.v2.02/www/Guidance/guidance.pl --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
 
 				#Checking for a sequence score file; if not available, Guidance failed.
 				if os.path.isfile(tax_guidance_outdir + '/MSA.MAFFT.Guidance2_res_pair_seq.scr_with_Names'):
@@ -166,7 +167,7 @@ def run(params):
 				os.system('mafft ' + tax_guidance_outdir + '/postGuidance_preTrimAl_unaligned.fasta > ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.postGuidance_preTrimAl_aligned.fasta')
 
 				#Gap trimming
-				os.system('Scripts/trimal-trimAl/source/trimal -in ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.postGuidance_preTrimAl_aligned.fasta -out ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.95gapTrimmed.fasta -gapthreshold ' + str(params.trimal_cutoff) + ' -fasta')
+				os.system('/usr/local/trimal -in ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.postGuidance_preTrimAl_aligned.fasta -out ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.95gapTrimmed.fasta -gapthreshold ' + str(params.trimal_cutoff) + ' -fasta')
 
 				#Copying over final aligments (pre and post gap trimming) into output folder.
 				os.system('cp ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.95gapTrimmed.fasta ' + params.output + '/Output/Guidance/' + file.split('.')[0].split('_preguidance')[0] + '.95gapTrimmed.fasta')
