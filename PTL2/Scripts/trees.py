@@ -46,7 +46,7 @@ def run(params):
 			if params.tree_method == 'iqtree':
 				os.system('iqtree2 -s ' + guidance_path + '/' + file + ' -m LG+G -T 10 --prefix ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
 			elif params.tree_method == 'iqtree_fast':
-				os.system('iqtree2 -s ' + guidance_path + '/' + file + ' -m LG+G -T 10 --fast --prefix ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
+				os.system('/usr/local/bin/iqtree -s ' + guidance_path + '/' + file + ' -m LG+G -T 10 --fast --prefix ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
 				
 			#Copy over the final output
 			if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
