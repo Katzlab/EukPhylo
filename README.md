@@ -31,7 +31,7 @@ docker run -it \
 --mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/R2G,dst=/Input_data \
 --mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/Output_data,dst=/Output_data \
 eukphylo
-
+```
 
 
 After development, GitHub CICD workflows can be added to automatically build and release the dockerfile for the end user.
