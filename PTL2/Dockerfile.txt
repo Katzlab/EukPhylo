@@ -1,0 +1,86 @@
+FROM python:3.8.20-bullseye
+
+
+
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install git wget ncbi-blast+-legacy mafft build-essential vim -y
+
+
+# EukPhylo installation
+# Tested on: RUN git clone -b patch-1 https://github.com/DLBPointon/EukPhylo.git
+
+# Install python dependencies
+RUN pip install biopython==1.75 ete3==3.1.2 tqdm==4.66.4 six==1.17.0
+
+RUN git clone -b Docker https://github.com/Katzlab/EukPhylo.git
+
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    unzip \
+    cmake \
+    gcc \
+    g++ \
+    libomp-dev \
+    libboost-all-dev \
+    libeigen3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Clone IQ-TREE 2 repository with submodules and compile it
+RUN git clone --recursive https://github.com/iqtree/iqtree2.git && \
+    cd iqtree2 && \
+    git checkout v2.4.0 && \
+    mkdir build && cd build && \
+    cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ .. && \
+    make -j$(nproc) && \
+    make install && \
+    cd ../.. && rm -rf iqtree2
+
+
+# VSEARCH installation
+RUN wget https://github.com/torognes/vsearch/releases/download/v2.21.0/vsearch-2.21.0-linux-aarch64.tar.gz && \
+    tar xzf vsearch-2.21.0-linux-aarch64.tar.gz && \
+    mv vsearch-2.21.0-linux-aarch64 /usr/local/vsearch && \
+    ln -s /usr/local/vsearch/bin/vsearch /usr/local/bin/vsearch
+
+# Guidance installation
+RUN mkdir guidance && \
+    wget https://taux.evolseq.net/guidance/static/download/guidance.v2.02.tar.gz && \
+    tar -xzvf guidance.v2.02.tar.gz -C guidance --no-same-owner && \
+    cd guidance/guidance.v2.02 && make
+
+# Guidance bio perl dependency
+RUN apt-get update && apt-get install -y cpanminus && \
+    cpanm Bio::Perl
+
+# Clean the container
+RUN rm -rf vsearch-2.21.0-linux-aarch64.tar.gz guidance.v2.02.tar.gz 
+
+
+# Download and compile TrimAl from source
+RUN wget -O trimal-1.5.0.zip https://github.com/inab/trimal/archive/refs/tags/v1.5.0.zip && \
+    unzip trimal-1.5.0.zip && \
+    cd trimal-1.5.0/source && \
+    make && \
+    mkdir -p /usr/local/trimal && \
+    cp trimal /usr/local/trimal/ && \
+    ln -s /usr/local/trimal/trimal /usr/local/bin/trimal && \
+    rm -rf /trimal-1.5.0.zip /trimal-1.5.0
+
+# Install FastTree
+RUN wget http://www.microbesonline.org/fasttree/FastTree && \
+    chmod +x FastTree && \
+    mv FastTree /usr/local/bin/
+
+
+# Add executables to path
+ENV PATH="$PATH:/iqtree/bin/iqtree:/usr/local/vsearch/bin/vsearch:/usr/local/trimal/trimal:/usr/local/bin"
+
+# Change executable permissions on wrapper script
+RUN ["chmod", "+x", "/EukPhylo/PTL2/run_eukphylo.sh"]
+
+# Change executable permissions on guidance
+RUN ["chmod", "+x", "/guidance/guidance.v2.02/www/Guidance/guidance.pl"]
+
+# Change entrypoint on execution of the container
+ENTRYPOINT ["bash","/EukPhylo/PTL2/run_eukphylo.sh"]
