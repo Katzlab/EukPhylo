@@ -23,7 +23,7 @@ docker run -it \
     eukphylo
 ```
 
-An example for running the dockerfile
+An example for running the dockerfile that takes in an OGlist, taxonlist, and R2Gs as input. It also requires an Output folder.
 ```
 docker run -it \
 --mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/PTL2listofOGs.txt,dst=/EukPhylo/PTL2listofOGs.txt \
