@@ -8,11 +8,11 @@ EukPhylo is an updated version of the PhyloToL pipeline from the [Katz Lab](http
 
 ## Dockerfile
 
-The docker file can be executed with:
+The [docker file](https://github.com/Katzlab/EukPhylo/blob/Docker/PTL2/Dockerfile.txt) for part 2 can be executed with:
 
 ```bash
 # Build the container
-docker build -f Dockerfile.txt . --tag eukphylo:1
+docker build -f Dockerfile.txt . --tag eukphylo
 
 
 # Current command is:
@@ -20,7 +20,18 @@ docker run -it \
     --mount type=bind,src=$(pwd)/databases,dst=/Databases \
     --mount type=bind,src=$(pwd)/input_data,dst=/Input_data \
     --mount type=bind,src=$(pwd)/output_data,dst=/Output_data \
-    eukphylo:1
+    eukphylo
 ```
+
+An example for running the dockerfile
+```
+docker run -it \
+--mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/PTL2listofOGs.txt,dst=/EukPhylo/PTL2listofOGs.txt \
+--mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/taxon_list.txt,dst=/EukPhylo/PTL2taxon_list.txt \
+--mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/R2G,dst=/Input_data \
+--mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/Output_data,dst=/Output_data \
+eukphylo
+
+
 
 After development, GitHub CICD workflows can be added to automatically build and release the dockerfile for the end user.
