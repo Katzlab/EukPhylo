@@ -24,6 +24,7 @@ docker run -it \
 ```
 
 An example for running the dockerfile that takes in an OGlist, taxonlist, and R2Gs as input. It also requires an Output folder.
+> :warning: ** Do not edit the "dst=/$(path)"
 ```
 docker run -it \
 --mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/OG_list.txt,dst=/EukPhylo/PTL2listofOGs.txt \
