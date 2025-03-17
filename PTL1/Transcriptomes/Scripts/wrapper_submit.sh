@@ -18,7 +18,7 @@ in_dir='/Input_data'
 
 ## EXAMPLE RUN COMMANDS BELOW
 
-# A simple run of part 2, starting from ReadyToGo files and running through tree building
+# A simple run of part 1
 python3 ${parent}/Scripts/wrapper.py \
     --first_script 1 \
     --last_script 7 \
