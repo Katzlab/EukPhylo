@@ -12,14 +12,14 @@
 
 # A simple run that goes from script 1 to script 7 (the last script) using the Universal genetic code
 
-parent='/EukPhylo/PTL1/Transcriptomes/'
+parent='/EukPhylo/PTL1/Transcriptomes/Scripts'
 out_dir='/Output_data'
 in_dir='/Input_data'
 
 ## EXAMPLE RUN COMMANDS BELOW
 
 # A simple run of part 1
-python3 ${parent}/Scripts/wrapper.py \
+python3 ${parent}/wrapper.py \
     --first_script 1 \
     --last_script 7 \
     --assembled_transcripts ${in_dir} \
