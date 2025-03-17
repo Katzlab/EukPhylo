@@ -11,5 +11,17 @@
 ## Example commands
 
 # A simple run that goes from script 1 to script 7 (the last script) using the Universal genetic code
-python3 Scripts/wrapper.py --first_script 1 --last_script 7 --assembled_transcripts AssembledTranscripts --genetic_code Gcode.txt --databases Databases > log.out
 
+parent='/EukPhylo/PTL1/Transcriptomes/'
+out_dir='/Output_data'
+in_dir='/Input_data'
+
+## EXAMPLE RUN COMMANDS BELOW
+
+# A simple run of part 2, starting from ReadyToGo files and running through tree building
+python3 ${parent}/Scripts/wrapper.py \
+    --first_script 1 \
+    --last_script 7 \
+    --assembled_transcripts ${in_dir} \
+    --databases ${parent}Databases \
+    --output ${out_dir} > Output.out
