@@ -24,4 +24,5 @@ python3 ${parent}/Scripts/wrapper.py \
     --last_script 7 \
     --assembled_transcripts ${in_dir} \
     --databases ${parent}Databases \
+    -g Universal \
     --output ${out_dir} > Output.out
