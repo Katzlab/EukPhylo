@@ -51,7 +51,7 @@ def script_one(args, ten_digit_codes):
 	#Running script 1a on all files
 	for file in os.listdir(args.assembled_transcripts):
 		if file[10:] == '_assembledTranscripts.fasta' and file[:10] in ten_digit_codes:
-			os.system('python 1a_TranscriptLengthFilter.py --input_file ' + args.assembled_transcripts + '/' + file + ' --output_file ' + args.output + '/Output/' + file[:10] + ' --minLen ' + str(args.minlen) + ' --maxLen ' + str(args.maxlen) + ' --spades') #SPADES ARGUMENT??
+			os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/1a_TranscriptLengthFilter.py --input_file ' + args.assembled_transcripts + '/' + file + ' --output_file ' + args.output + '/Output/' + file[:10] + ' --minLen ' + str(args.minlen) + ' --maxLen ' + str(args.maxlen) + ' --spades') #SPADES ARGUMENT??
 
 	#Run script 1b if the XPC step is being run
 	if args.xplate_contam:
@@ -59,7 +59,7 @@ def script_one(args, ten_digit_codes):
 			print('\nERROR: If you are running cross-plate contamination, a file designating species assignments is required for the --conspecific_names argument\n')
 			exit()
 		else:
-			os.system('python 1b_CrossPlateContamination.py ' + args.output + '/Output/XlaneBleeding ' + str(args.minlen) + ' ' + args.conspecific_names)
+			os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/1b_CrossPlateContamination.py ' + args.output + '/Output/XlaneBleeding ' + str(args.minlen) + ' ' + args.conspecific_names)
 
 
 def script_two(args):
@@ -67,10 +67,10 @@ def script_two(args):
 	#Run scripts 2a and 2b on all files.
 	for folder in os.listdir(args.output + '/Output/'):
 		if os.path.isfile(args.output + '/Output/' + folder + '/SizeFiltered/' + folder + '.' + str(args.minlen) + 'bp.fasta'):
-			os.system('python 2a_Identify_rRNA.py --input_file ' + args.output + '/Output/' + folder + '/SizeFiltered/' + folder + '.' + str(args.minlen) + 'bp.fasta --databases ' + args.databases)
+			os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/2a_Identify_rRNA.py --input_file ' + args.output + '/Output/' + folder + '/SizeFiltered/' + folder + '.' + str(args.minlen) + 'bp.fasta --databases ' + args.databases)
 
 			fasta_withBact = args.output + '/Output/' + folder + '/' + folder + '_NorRNAseqs.fasta'
-			os.system('python 2b_Identify_Proks.py --input_file ' + fasta_withBact + ' --databases ' + args.databases)
+			os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/2b_Identify_Proks.py --input_file ' + fasta_withBact + ' --databases ' + args.databases)
 
 #NEED TO SORT OUT FILE NAMES ETC. BELOW HERE
 
@@ -79,7 +79,7 @@ def script_three(args):
 
 	for folder in os.listdir(args.output + '/Output'):
 		if os.path.isfile(args.output + '/Output/' + folder + '/' + folder + '_WTA_EPU.fasta'):
-			os.system('python 3_AssignOGs.py --input_file ' + args.output + '/Output/' + folder + '/' + folder + '_WTA_EPU.fasta --evalue 1e-15 --databases ' + args.databases)
+			os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/3_AssignOGs.py --input_file ' + args.output + '/Output/' + folder + '/' + folder + '_WTA_EPU.fasta --evalue 1e-15 --databases ' + args.databases)
 		
 
 
@@ -87,7 +87,7 @@ def script_three(args):
 def script_four(args):			
 	for folder in os.listdir(args.output + '/Output'):
 		if os.path.isfile(args.output + '/Output/' + folder + '/' + folder + '_WTA_EPU.Renamed.fasta'):
-				os.system('python 4_InFrameStopCodonEstimator.py --input_file ' + args.output + '/Output/' + folder + '/' + folder + '_WTA_EPU.Renamed.fasta --databases ' + args.databases + ' --seq_count ' + str(args.seq_count))
+				os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/4_InFrameStopCodonEstimator.py --input_file ' + args.output + '/Output/' + folder + '/' + folder + '_WTA_EPU.Renamed.fasta --databases ' + args.databases + ' --seq_count ' + str(args.seq_count))
 	#Checking to see if there are taxa with less than the required number of sequences.
 	if os.path.exists(args.databases + '/Taxa_with_few_sequences.txt'):
 		with open(args.databases + '/Taxa_with_few_sequences.txt', 'r') as f:
@@ -164,7 +164,7 @@ def script_five(args):
 			if os.path.isfile(args.output + '/Output/' + folder + '/' + folder + '_WTA_EPU.Renamed.fasta') and os.path.isdir(args.output + '/Output/' + folder + '/StopCodonFreq'):
 				for line in lines:
 					if line[0] == folder and line[-1].lower() in valid_codes:
-						os.system('python 5_GCodeTranslate.py --input_file ' + args.output + '/Output/' + folder + '/' + folder + '_WTA_EPU.Renamed.fasta --genetic_code ' + line[-1])
+						os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/5_GCodeTranslate.py --input_file ' + args.output + '/Output/' + folder + '/' + folder + '_WTA_EPU.Renamed.fasta --genetic_code ' + line[-1])
 					#Taxa without valid genetic codes will be skipped.
 					elif line[-1].lower() not in valid_codes and 'Genetic Code' not in line:
 						print('\n' + line[-1] + ' is not a valid genetic code. Skipping taxon ' + folder + '.\n')
@@ -190,14 +190,14 @@ def script_six(args):
 		exit()
 	
 	for prefix in unique_prefixes:
-		os.system('python 6_FilterPartials.py --file_prefix ' + args.output + '/Output/' + prefix + ' --hook_fasta ' + hook_fasta)
+		os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/6_FilterPartials.py --file_prefix ' + args.output + '/Output/' + prefix + ' --hook_fasta ' + hook_fasta)
 		
 #Running scripts 7a and 7b on all taxa
 def script_seven(args):
 
 	for file in os.listdir(args.output + '/Output/ToRename'):
 		if '.AA.ORF.fasta' in file:
-			os.system('python 7a_FinalizeName.py --input_file ' + args.output + '/Output/ToRename/' + file + ' --name ' + file[:10])
+			os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/7a_FinalizeName.py --input_file ' + args.output + '/Output/ToRename/' + file + ' --name ' + file[:10])
 
 	os.mkdir(args.output + '/Output/Intermediate')
 
@@ -205,7 +205,7 @@ def script_seven(args):
 		if file != 'ReadyToGo' and file != 'Intermediate':
 			os.system('mv ' + args.output + '/Output/' + file + ' ' + args.output + '/Output/Intermediate')
 
-	os.system('python 7b_SummaryStats.py -i ' + args.output + '/Output -d ' + args.databases)
+	os.system('python /EukPhylo/PTL1/Transcriptomes/Scripts/7b_SummaryStats.py -i ' + args.output + '/Output -d ' + args.databases)
 
 
 if __name__ == "__main__":
