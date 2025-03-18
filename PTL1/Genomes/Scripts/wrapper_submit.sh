@@ -12,3 +12,17 @@
 # Start at script 1 and go through script 5 (the final script) using the Universal genetic code
 python3 Scripts/wrapper.py -1 1 -2 5 --cds Input -o Output --genetic_code Universal --databases Databases > log.out
 
+parent='/EukPhylo/PTL1/Genomes/Scripts/'
+out_dir='/Output_data'
+in_dir='/Input_data'
+
+## EXAMPLE RUN COMMANDS BELOW
+
+# A simple run of part 1
+python3 ${parent}/wrapper.py \
+    --first_script 1 \
+    --last_script 5 \
+    --cds ${in_dir} \
+    --databases ${parent}Databases \
+    --genetic_code Universal \
+    --output ${out_dir} > Output.out
