@@ -1,0 +1,53 @@
+# Base Image
+FROM python:3.8.20-bullseye
+
+# Install required system dependencies and clean up apt cache
+RUN apt-get update && apt-get install -y \
+    wget \
+    cmake \
+    g++ \
+    make \
+    zlib1g-dev \
+    libjemalloc-dev \
+    unzip \
+    git \
+    ncbi-blast+ \
+    && rm -rf /var/lib/apt/lists/*  # Clean apt cache to reduce image size
+
+# Install Python dependencies
+RUN pip install biopython==1.75 ete3==3.1.2 tqdm==4.66.4 six==1.17.0
+
+# Clone EukPhylo repository
+RUN git clone -b Docker https://github.com/Katzlab/EukPhylo.git
+
+# Install VSEARCH
+RUN wget https://github.com/torognes/vsearch/releases/download/v2.21.0/vsearch-2.21.0-linux-aarch64.tar.gz && \
+    tar xzf vsearch-2.21.0-linux-aarch64.tar.gz && \
+    mv vsearch-2.21.0-linux-aarch64 /usr/local/vsearch && \
+    ln -s /usr/local/vsearch/bin/vsearch /usr/local/bin/vsearch && \
+    rm -rf vsearch-2.21.0-linux-aarch64.tar.gz
+
+# Compile DIAMOND v2.1.11 from source
+RUN wget https://github.com/bbuchfink/diamond/archive/refs/tags/v2.1.11.tar.gz && \
+    tar xzf v2.1.11.tar.gz && \
+    cd diamond-2.1.11 && \
+    mkdir build && cd build && \
+    cmake .. && \
+    make -j$(nproc) && \
+    cp diamond /usr/local/bin/ && \
+    cd ../.. && rm -rf diamond-2.1.11 v2.1.11.tar.gz
+
+# Verify DIAMOND installation
+RUN diamond --version
+
+# Verify installations
+RUN diamond --version && vsearch --version && blastn -version
+
+# Ensure executables are accessible
+ENV PATH="$PATH:/usr/local/vsearch/bin:/usr/local/bin"
+
+# Change executable permissions on wrapper script
+RUN chmod +x /EukPhylo/PTL1/Transcriptomes/Scripts/wrapper_submit.sh
+
+# Set container entrypoint
+ENTRYPOINT ["bash", "/EukPhylo/PTL1/Transcriptomes/Scripts/wrapper_submit.sh"]
