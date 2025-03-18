@@ -12,7 +12,7 @@ The [docker file](https://github.com/Katzlab/EukPhylo/blob/Docker/PTL1/Dockerfil
 
 ```bash
 # Build the container
-docker build -f Dockerfile.txt . --tag eukphylo
+docker build -f Dockerfile.txt . --tag eukphylo_one
 
 
 # Current command is:
@@ -20,18 +20,17 @@ docker run -it \
     --mount type=bind,src=$(pwd)/databases,dst=/Databases \
     --mount type=bind,src=$(pwd)/input_data,dst=/Input_data \
     --mount type=bind,src=$(pwd)/output_data,dst=/Output_data \
-    eukphylo
+    eukphylo_one
 ```
 
 An example for running the dockerfile that takes in an OGlist, taxonlist, and R2Gs as input. It also requires an Output folder.
 > :warning: Do not change the "dst=/$(path)", only change "src=$(pwd)"
 ```
 docker run -it \
---mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/OG_list.txt,dst=/EukPhylo/PTL2listofOGs.txt \
---mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/taxon_list.txt,dst=/EukPhylo/PTL2taxon_list.txt \
---mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/R2G,dst=/Input_data \
---mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/Output_data,dst=/Output_data \
-eukphylo
+--mount type=bind,src=/Users/gani/phylotol_ms/Docker_part1/AssembledTranscripts,dst=/Input_data \
+--mount type=bind,src=/Users/gani/phylotol_ms/Docker_part1/Databases,dst=/EukPhylo/PTL1/Transcriptomes/Scripts/Databases \
+--mount type=bind,src=/Users/gani/phylotol_ms/Docker_part1/Output_data,dst=/Output_data \
+eukphylo_one
 ```
 
 
@@ -40,15 +39,16 @@ The [docker file](https://github.com/Katzlab/EukPhylo/blob/Docker/PTL2/Dockerfil
 
 ```bash
 # Build the container
-docker build -f Dockerfile.txt . --tag eukphylo
+docker build -f Dockerfile.txt . --tag eukphylo_two
 
 
 # Current command is:
 docker run -it \
-    --mount type=bind,src=$(pwd)/databases,dst=/Databases \
+    --mount type=bind,src=$(pwd)/OG_list.txt,dst=/EukPhylo/PTL2listofOGs.txt \
+    --mount type=bind,src=$(pwd)/taxon_list.txt,dst=/EukPhylo/PTL2taxon_list.txt \
     --mount type=bind,src=$(pwd)/input_data,dst=/Input_data \
     --mount type=bind,src=$(pwd)/output_data,dst=/Output_data \
-    eukphylo
+    eukphylo_two
 ```
 
 An example for running the dockerfile that takes in an OGlist, taxonlist, and R2Gs as input. It also requires an Output folder.
@@ -59,7 +59,7 @@ docker run -it \
 --mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/taxon_list.txt,dst=/EukPhylo/PTL2taxon_list.txt \
 --mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/R2G,dst=/Input_data \
 --mount type=bind,src=/Users/gani/phylotol_ms/Docker/PT2/Output_data,dst=/Output_data \
-eukphylo
+eukphylo_two
 ```
 
 
