@@ -24,5 +24,5 @@ python3 ${parent}/wrapper.py \
     --last_script 7 \
     --assembled_transcripts ${in_dir} \
     --databases ${parent}Databases \
-    -g Universal \
+    --genetic_code Universal \
     --output ${out_dir} > Output.out
