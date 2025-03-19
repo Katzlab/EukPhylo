@@ -5,7 +5,8 @@
 # First, all sequences shorter than 33% or longer than 150% the average length of sequences 
 # from the same OG in the Hook database are removed. Then, for each transcriptomic sample, 
 # all sequences within an OG are compared at the nucleotide level to the sequence with the 
-# highest “score” (defined as k-mer coverage multiplied by length). The script should be run
+# highest “score” (defined as k-mer coverage multiplied by length) using BLAST, and sequences that
+# are 98% identical to the master sequence are removed. The script should be run
 # as part of the EukPhylo Part 1 pipeline using the script wrapper.py. It requires that the
 # structure of the 'Output' folder be as output by script 5, and that the Databases/db_OG folder
 # contains a .fasta file containing all amino acid sequences in the OG reference database (Hook)
