@@ -44,8 +44,8 @@ def main():
 
     args = parser.parse_args()
 
-    if not os.path.isdir(args.input):
-        print(f'Error: Input folder "{args.input}" does not exist.')
+    if not os.path.isdir(args.input_files):
+        print(f'Error: Input folder "{args.input_files}" does not exist.')
         exit(1)
 
     if not os.path.isdir(args.output):
