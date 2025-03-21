@@ -60,7 +60,7 @@ def main():
         overlap = input_validation(args.overlap, 'ERROR! Use format 0.## for DNA sequence alignment overlap value.')
         cluster_sequences('cd-hit-est', identity, overlap, args.input_files, args.output)
     else:
-        print('Invalid sequence type. Choose "aa" for Amino Acids or "dna" for DNA.')
+        print('Invalid sequence type. Choose "aa" for Amino Acids or "dna" for NTD.')
         exit(1)
 
 if __name__ == "__main__":
