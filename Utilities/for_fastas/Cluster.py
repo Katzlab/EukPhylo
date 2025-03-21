@@ -39,7 +39,7 @@ def main():
     parser.add_argument('--type', choices=['aa', 'dna'], required=True, help='Type of sequences (aa for Amino Acids, dna for DNA)')
     parser.add_argument('--identity', type=str, required=True, help='Sequence Identity Threshold (e.g., 0.99, 0.95)')
     parser.add_argument('--overlap', type=str, required=True, help='Sequence Alignment Overlap Value (e.g., 0.67, 0.75)')
-    parser.add_argument('--input', type=str, required=True, help='Input folder containing sequences in fasta format')
+    parser.add_argument('--input_files', type=str, required=True, help='Input folder containing sequences in fasta format')
     parser.add_argument('--output', type=str, required=True, help='Output folder for clustered sequences')
 
     args = parser.parse_args()
