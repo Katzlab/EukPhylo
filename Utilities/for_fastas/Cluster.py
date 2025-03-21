@@ -54,7 +54,7 @@ def main():
     if args.type == 'aa':
         identity = input_validation(args.identity, 'ERROR! Use format 0.## for Amino acids sequence identity threshold.')
         overlap = input_validation(args.overlap, 'ERROR! Use format 0.## for Amino acids sequence alignment overlap value.')
-        cluster_sequences('cd-hit', identity, overlap, args.input, args.output)
+        cluster_sequences('cd-hit', identity, overlap, args.input_files, args.output)
     elif args.type == 'dna':
         identity = input_validation(args.identity, 'ERROR! Use format 0.## for DNA sequence identity threshold.')
         overlap = input_validation(args.overlap, 'ERROR! Use format 0.## for DNA sequence alignment overlap value.')
