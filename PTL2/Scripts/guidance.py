@@ -61,6 +61,9 @@ def run(params):
 
 			if nseqs > 2000:
 				too_many_seqs = True
+				print(file + 'has more than 2000 seqs')
+				print('Do you want to run this?')
+				print('Stopping run.')
 				break
 
 		if too_many_seqs and not params.allow_large_files:
