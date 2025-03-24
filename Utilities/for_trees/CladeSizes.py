@@ -236,7 +236,7 @@ if __name__ == '__main__':
 	for tree_file in tqdm(os.listdir(args.input)):
 		if tree_file.split('.')[-1] in ('tre', 'tree', 'treefile', 'nex'):
 			clades_per_tax, majs_per_clade, mins_per_clade = get_clades(args.input + '/' + tree_file, args)
-			base_filename = os.path.splittext(tree_file)[0]
+			base_filename = os.path.splitext(tree_file)[0]
 			clades_per_tax_per_file.update({ base_filename : clades_per_tax })
 			majs_per_clade_per_file.update({ base_filename : majs_per_clade })
 			mins_per_clade_per_file.update({ base_filename : mins_per_clade })
