@@ -62,6 +62,8 @@ def run(params):
 			if nseqs > 2000:
 				too_many_seqs = True
 				#Print if OG has > 2000 seqs
+				guidance_log = open(params.output + '/Output/GuidanceLog.txt', 'w')
+				guidance_log.write(file + 'has more than 2000 seqs.\n Stopping run')
 				print(file + 'has more than 2000 seqs')
 				print('Do you want to run this?')
 				print('Stopping run.')
