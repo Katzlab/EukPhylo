@@ -327,10 +327,21 @@ def cl_mafft(params):
 
 #Utility function to run FastTree in between iterations (if this is the chosen tree-building method)
 def cl_fasttree(params):
-
 	for file in os.listdir(params.output + '/Output/Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			os.system('FastTree ' + params.output + '/Output/Guidance/' + file + ' > ' + params.output + '/Output/Trees/' + file.split('.')[0] + '.FastTree.tre')
+
+#Utility function to run Iqtree in between iterations (if this is the chosen tree-building method)
+def cl_iqtree(params):
+	for file in os.listdir(params.output + '/Output/Guidance'):
+		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
+			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --prefix ' + params.output + '/Output/Trees/' + file.split('.')[0] + '.IQTree.tre')			
+
+#Utility function to run Iqtree_fast in between iterations (if this is the chosen tree-building method)
+def cl_iqtree_fast(params):
+	for file in os.listdir(params.output + '/Output/Guidance'):
+		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
+			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --fast --prefix ' + params.output + '/Output/Trees/' + file.split('.')[0] + '.IQTree.tre')			
 
 #Wrapper script to manage parameters and iteration
 def run(params):
@@ -440,11 +451,18 @@ def run(params):
 
 		if params.cl_tree_method == 'fasttree':
 			cl_fasttree(params)
-		else:
-			if 'iqtree' in params.cl_tree_method:
-				os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
-			elif params.cl_tree_method == 'raxml':
-				os.system('rm -r ' + params.output + '/Output/Intermediate/RAxML/*')
+		elif params.cl_tree_method == 'iqtree':
+			cl_iqtree(params)
+		elif params.cl_tree_method == 'iqtree_fast':
+			cl_iqtree_fast(params)
+		elif params.cl_tree_method == 'raxml':
+			os.system('rm -r ' + params.output + '/Output/Intermediate/RAxML/*')
+		trees.run(params)
 
-			trees.run(params)
+			#if 'iqtree' in params.cl_tree_method:
+				#os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
+			#elif params.cl_tree_method == 'raxml':
+				#os.system('rm -r ' + params.output + '/Output/Intermediate/RAxML/*')
+
+			#trees.run(params)
 
