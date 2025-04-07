@@ -334,12 +334,12 @@ def cl_fasttree(params):
 
 #Utility function to run Iqtree in between iterations (if this is the chosen tree-building method)
 def cl_iqtree(params):
-	if not os.path.isdir(params.output + '/Output/Intermediate/IQTree'):
-		os.mkdir(params.output + '/Output/Intermediate/IQTree')
-	tax_iqtree_outdir = params.output + '/Output/Intermediate/IQTree/' + file.split('.')[0].split('_preguidance')[0]
-	os.mkdir(tax_iqtree_outdir)
 	for file in os.listdir(params.output + '/Output/Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
+			if not os.path.isdir(params.output + '/Output/Intermediate/IQTree'):
+				os.mkdir(params.output + '/Output/Intermediate/IQTree')
+			tax_iqtree_outdir = params.output + '/Output/Intermediate/IQTree/' + file.split('.')[0].split('_preguidance')[0]
+			os.mkdir(tax_iqtree_outdir)
 			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --prefix ' +  tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')	
 		#Copy over the final output
 		if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
@@ -348,16 +348,17 @@ def cl_iqtree(params):
 	
 #Utility function to run Iqtree_fast in between iterations (if this is the chosen tree-building method)
 def cl_iqtree_fast(params):
-	if not os.path.isdir(params.output + '/Output/Intermediate/IQTree'):
-		os.mkdir(params.output + '/Output/Intermediate/IQTree')
-	tax_iqtree_outdir = params.output + '/Output/Intermediate/IQTree/' + file.split('.')[0].split('_preguidance')[0]
-	os.mkdir(tax_iqtree_outdir)
 	for file in os.listdir(params.output + '/Output/Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
-			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --fast --prefix ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
+			if not os.path.isdir(params.output + '/Output/Intermediate/IQTree'):
+				os.mkdir(params.output + '/Output/Intermediate/IQTree')
+			tax_iqtree_outdir = params.output + '/Output/Intermediate/IQTree/' + file.split('.')[0].split('_preguidance')[0]
+			os.mkdir(tax_iqtree_outdir)
+			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --prefix --fast ' +  tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')	
 		#Copy over the final output
 		if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
 			os.system('cp ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile ' + params.output + '/Output/Trees/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.tree')
+
 
 #Wrapper script to manage parameters and iteration
 def run(params):
