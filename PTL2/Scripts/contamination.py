@@ -344,6 +344,7 @@ def cl_iqtree(params):
 			#Copy over the final output
 			if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
 				os.system('cp ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile ' + params.output + '/Output/Trees/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.tree')
+	os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
 
 	
 #Utility function to run Iqtree_fast in between iterations (if this is the chosen tree-building method)
@@ -358,6 +359,7 @@ def cl_iqtree_fast(params):
 			#Copy over the final output
 			if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
 				os.system('cp ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile ' + params.output + '/Output/Trees/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.tree')
+	os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
 
 
 #Wrapper script to manage parameters and iteration
