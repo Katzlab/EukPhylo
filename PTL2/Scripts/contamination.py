@@ -354,7 +354,7 @@ def cl_iqtree_fast(params):
 				os.mkdir(params.output + '/Output/Intermediate/IQTree')
 			tax_iqtree_outdir = params.output + '/Output/Intermediate/IQTree/' + file.split('.')[0].split('_preguidance')[0]
 			os.mkdir(tax_iqtree_outdir)
-			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --prefix --fast ' +  tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')	
+			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --fast --prefix ' +  tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')	
 			#Copy over the final output
 			if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
 				os.system('cp ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile ' + params.output + '/Output/Trees/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.tree')
