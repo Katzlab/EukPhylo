@@ -49,7 +49,7 @@ def get_params():
 	CL = parser.add_argument_group('Contamination loop parameters')
 	CL.add_argument('--contamination_loop', default = None, choices = {'seq', 'clade'}, help = 'Remove sequences by looking at the sisters of each sequence in a rules file or by picking the best clades')
 	CL.add_argument('--nloops', default = 10, type = int, help = 'The maximum number of contamination-removal loops')
-	CL.add_argument('--cl_tree_method', default = 'fasttree', choices = {'iqtree', 'raxml', 'fasttree', 'iqtree_fast'}, help = 'Tree-building method to use in each contamination loop iteration.')
+	CL.add_argument('--cl_tree_method', default = 'iqtree_fast', choices = {'iqtree', 'raxml', 'fasttree', 'iqtree_fast'}, help = 'Tree-building method to use in each contamination loop iteration.')
 	CL.add_argument('--cl_alignment_method', default = 'mafft_only', choices = {'mafft_only', 'guidance'}, help = 'Alignment method to use in each contamination loop iteration.')
 	CL.add_argument('--cl_exclude_taxa', type = str, default = None, help = 'Path to a file containing taxon names present in input MSA/tree files but which should be removed in the first iteration of the contamination loop.')
 
