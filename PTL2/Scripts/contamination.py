@@ -331,17 +331,30 @@ def cl_fasttree(params):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			os.system('FastTree ' + params.output + '/Output/Guidance/' + file + ' > ' + params.output + '/Output/Trees/' + file.split('.')[0] + '.FastTree.tre')
 
-#Utility function to run Iqtree in between iterations (if this is the chosen tree-building method)
-def cl_iqtree(params):
-	for file in os.listdir(params.output + '/Output/Guidance'):
-		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
-			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --prefix ' + params.output + '/Output/Trees/' + file.split('.')[0] + '.IQTree.tre')			
 
-#Utility function to run Iqtree_fast in between iterations (if this is the chosen tree-building method)
-def cl_iqtree_fast(params):
-	for file in os.listdir(params.output + '/Output/Guidance'):
-		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
-			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --fast --prefix ' + params.output + '/Output/Trees/' + file.split('.')[0] + '.IQTree.tre')			
+#Run IQ-Tree
+if params.cl_tree_method == 'iqtree' or params.cl_tree_method == 'iqtree_fast':
+	#Make intermediate folders
+	if not os.path.isdir(params.output + '/Output/Intermediate/IQTree'):
+		os.mkdir(params.output + '/Output/Intermediate/IQTree')
+	tax_iqtree_outdir = params.output + '/Output/Intermediate/IQTree/' + file.split('.')[0].split('_preguidance')[0]
+	os.mkdir(tax_iqtree_outdir)
+	
+	#Utility function to run Iqtree in between iterations (if this is the chosen tree-building method)
+	def cl_iqtree(params):
+		for file in os.listdir(params.output + '/Output/Guidance'):
+			if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
+				os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --prefix ' +  tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')			
+	
+	#Utility function to run Iqtree_fast in between iterations (if this is the chosen tree-building method)
+	def cl_iqtree_fast(params):
+		for file in os.listdir(params.output + '/Output/Guidance'):
+			if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
+				os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --fast --prefix ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
+	
+	#Copy over the final output
+	if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
+		os.system('cp ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile ' + params.output + '/Output/Trees/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.tree')
 
 #Wrapper script to manage parameters and iteration
 def run(params):
