@@ -472,8 +472,10 @@ def run(params):
 			cl_fasttree(params)
 		elif params.cl_tree_method == 'iqtree':
 			cl_iqtree(params)
+			os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
 		elif params.cl_tree_method == 'iqtree_fast':
 			cl_iqtree_fast(params)
+			os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
 		elif params.cl_tree_method == 'raxml':
 			os.system('rm -r ' + params.output + '/Output/Intermediate/RAxML/*')
 		trees.run(params)
