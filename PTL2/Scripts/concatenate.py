@@ -126,8 +126,7 @@ def remove_paralogs(params):
 			elif params.concat_target_taxa != None:
 				target_codes = [params.concat_target_taxa]
 			else:
-				print('\nERROR: missing --concat_target_taxa argument. When concatenating, you need to give the taxonomic group (sequence prefix), groups, or a file containing a list of groups (multiple prefixes) for which to select sequences to construct a concatenated alignment\n')
-				exit()
+				target_codes = [leaf.name[:10] for leaf in tree]
 
 			monophyletic_clades = { }
 
