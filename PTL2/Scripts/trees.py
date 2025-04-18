@@ -42,13 +42,21 @@ def run(params):
 			tax_iqtree_outdir = params.output + '/Output/Intermediate/IQTree/' + file.split('.')[0].split('_preguidance')[0]
 			os.mkdir(tax_iqtree_outdir)
 
-			#Run IQ-Tree
+			#Examples on how to run IQ-Tree
+			#Comment on the lines that do not fit your system
+			#Run IQ-Tree on the Smith College grid
 			if params.tree_method == 'iqtree':
 				os.system('iqtree2 -s ' + guidance_path + '/' + file + ' -m LG+G -T 10 --prefix ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
 			elif params.tree_method == 'iqtree_fast':
 				os.system('iqtree2 -s ' + guidance_path + '/' + file + ' -m LG+G -T 10 --fast --prefix ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
 				
-			#Copy over the final output
+			#Run IQ-Tree in HPC Unity Cluster
+			#if params.tree_method == 'iqtree':
+				#os.system('iqtree2 -s ' + guidance_path + '/' + file + ' -m LG+G --prefix ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
+			#elif params.tree_method == 'iqtree_fast':
+				#os.system('iqtree2 -s ' + guidance_path + '/' + file + ' -m LG+G --fast --prefix ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
+			
+			# Copy over the final output
 			if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
 				os.system('cp ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile ' + params.output + '/Output/Trees/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.tree')
 				#color(params.output + '/Output/Trees/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.tree')
