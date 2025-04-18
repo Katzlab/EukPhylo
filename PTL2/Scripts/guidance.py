@@ -14,6 +14,11 @@
 # that are at least 95% gaps (or --gap_trim_cutoff) generating files in the “Guidance” 
 # output folder.
 
+# Users should note that there are two version of Guidance. This script, by default, uses
+# the newest version (v2.1). Users who wish to use the older version of Guidance will have 
+# to make a small change in guidance.py (look for a comment in the script with the phrase 
+# "UNCOMMENT THE FOLLOWING LINE IF USING v2.0.2"). See the Wiki for more information here.
+
 # This step is either intended to be run starting with --start = unaligned (but not raw)
 # inputs, meaning one amino acid alignment per OG. It can also be run directly after the
 # preguidance step. The run() function is called in two places: in eukphylo.py generally,
