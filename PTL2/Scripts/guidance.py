@@ -1,4 +1,4 @@
-# Last updated Apr 2 2024
+# Last updated Apr 18 2025
 # Authors: Auden Cote-L'Heureux and Mario Ceron-Romero
 
 # This script runs Guidance in an iterative fashion for more both MSA construction 
