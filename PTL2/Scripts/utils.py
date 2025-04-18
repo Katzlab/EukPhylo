@@ -39,7 +39,7 @@ def get_params():
 	core.add_argument('--similarity_filter', action = 'store_true', help = 'Run the similarity filter in pre-Guidance')
 	core.add_argument('--sim_cutoff', default = 1, type = float, help = 'Sequences from the same taxa that are assigned to the same OG are removed if they are more similar than this cutoff')
 	core.add_argument('--guidance_iters', default = 5, type = int, help = 'Number of Guidance iterations for sequence removal')
-	core.add_argument('--guidance_path', help = 'Path to the downloaded Guidance folder (probably called guidance_Linux or guidance_MacOS-arm64, this folder should contain a folder called "scripts" which contains the guidance_main.py script). You can download this folder from this link: https://github.com/XseniaP/Guidance_mid/tree/main')
+	core.add_argument('--guidance_path', help = 'Path to the downloaded Guidance folder (probably called guidance_Linux or guidance_MacOS-arm64, this folder should contain a folder called "script" which contains the guidance_main.py script). You can download this folder from this link: https://github.com/XseniaP/Guidance_mid/tree/main')
 	core.add_argument('--seq_cutoff', default = 0.3, type = float, help = 'During guidance, taxa are removed if their score is below this cutoff')
 	core.add_argument('--col_cutoff', default = 0.0, type = float, help = 'During guidance, columns are removed if their score is below this cutoff')
 	core.add_argument('--res_cutoff', default = 0.0, type = float, help = 'During guidance, residues are removed if their score is below this cutoff')
