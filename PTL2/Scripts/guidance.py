@@ -97,11 +97,8 @@ def run(params):
 					mafft_alg = 'auto'
 
 				#Running Guidance (one per OG per iteration)
-				#for katzlab/Smith College HPC (Grid):
-				os.system('/guidance/guidance.v2.02/www/Guidance/guidance.pl --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
-				#Example:
-				#os.system('Scripts/guidance.v2.02/www/Guidance/guidance.pl --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
-
+				os.system('/guidance/www/Guidance/guidance.pl --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
+				
 				#Checking for a sequence score file; if not available, Guidance failed.
 				if os.path.isfile(tax_guidance_outdir + '/MSA.MAFFT.Guidance2_res_pair_seq.scr_with_Names'):
 					#All sequences below score cutoff
