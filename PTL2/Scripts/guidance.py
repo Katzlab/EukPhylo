@@ -1,4 +1,4 @@
-# Last updated Apr 18 2025
+# Last updated Jun 02 2025
 # Authors: Auden Cote-L'Heureux and Mario Ceron-Romero
 
 # This script runs Guidance in an iterative fashion for more both MSA construction 
@@ -106,6 +106,12 @@ def run(params):
 
 				#For Guidance v2.0.2. UNCOMMENT THE FOLLOWING LINE IF USING v2.0.2
 				#os.system('Scripts/guidance.v2.02/www/Guidance/guidance.pl --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
+
+				#For UMass Unity users, use the following line and comment about the others:
+				#os.system('python3 /work/pi_lkatz_smith_edu/Guidance/guidance_Linux/script/guidance_main.py --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
+
+				#For Smith College Grid users, use the following line and comment about the others:
+				#os.system('python /gridapps/software/Guidance_mid/2.1b-foss-2023a/bin/script/guidance_main.py --seqFile ' + guidance_input + '/' + file + ' --msaProgram MAFFT --seqType aa --outDir ' + tax_guidance_outdir + ' --seqCutoff ' + str(params.seq_cutoff) + ' --colCutoff ' + str(params.col_cutoff) + " --outOrder as_input --bootstraps 10 --MSA_Param '\\--" + mafft_alg + " --maxiterate 1000 --thread " + str(params.guidance_threads) + " --bl 62 --anysymbol' > " + params.output + '/Output/Intermediate/Guidance/Output/' + file[:10] + '/log.txt')
 
 				#Checking for a sequence score file; if not available, Guidance failed.
 				if os.path.isfile(tax_guidance_outdir + '/MSA.MAFFT.Guidance2_res_pair_seq.scr_with_Names'):
