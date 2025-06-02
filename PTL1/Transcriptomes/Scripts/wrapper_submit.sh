@@ -24,7 +24,7 @@ module load BLAST+/2.12.0-gompi-2021b
 module load DIAMOND/2.0.13-GCC-11.2.0
 module load VSEARCH/2.22.1-GCC-11.3.0
 
-parent='/Your/Home/Folder'
+parent='/Your/Home/Folder/'
 
 ## Example commands
 
