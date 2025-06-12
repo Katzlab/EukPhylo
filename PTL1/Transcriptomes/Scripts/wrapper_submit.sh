@@ -15,6 +15,8 @@
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1 # #change to number of srun when running multiple instances
 #SBATCH --mem=160G
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=email@xxx.edu ##add your email address for job updates
 
 module purge       #Cleans up any loaded modules
 module load slurm
