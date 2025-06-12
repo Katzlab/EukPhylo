@@ -29,7 +29,7 @@ parent='/Your/Home/Folder/'
 ## Example commands
 
 # A simple run that goes from script 1 to script 7 (the last script) using the Universal genetic code
-srun -D ${parent}Scripts python3 ${parent}Scripts/wrapper.py --first_script 1 --last_script 7 --assembled_transcripts ${parent}AssembledTranscripts --genetic_code ${parent}Gcode.txt --databases ${parent}Databases > log.out
+srun -D ${parent}Scripts python3 ${parent}Scripts/wrapper.py --first_script 1 --last_script 7 --assembled_transcripts ${parent}AssembledTranscripts -o ${parent}Out --genetic_code ${parent}Gcode.txt --databases ${parent}Databases > log.out
 
 # Including the cross-plate contamination step, using conspecific names
 srun -D ${parent} python3 ${parent}Scripts/wrapper.py --first_script 1 --last_script 7 --assembled_transcripts ${parent}AssembledTranscripts --output . --genetic_code ${parent}Gcode.txt --databases ${parent}Databases --xplate_contam --conspecific_names ${parent}Conspecific.txt > log.out
