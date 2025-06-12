@@ -3,9 +3,10 @@
 #Intent: Summarize nucleotide composition statistics for a fasta file or folder of fasta files
 #Dependencies: Python3, numpy, BioPython
 #Inputs: Fasta file or folder of fasta files
-#Outputs: A fasta file filtered for properly formatted sequences and several spreadsheets summarizing GC, ENc, RSCU, etc.
+#Outputs: A fasta file filtered for properly formatted sequences and several spreadsheets summarizing GC3S, ENc, RSCU, etc.
 #Example: python3 CUB.py -i seqs.fasta 
-#Note: Use "python3 CUB.py -i seqs.fasta --require_start --require_stop" when using the on R2G files.
+#Note: Use "python3 CUB.py -i seqs.fasta --require_start --require_stop" to see more conservative estimate
+#Note: in this script we use GC3 and GC3S interchangeably, though the abbreviation GC3S is probably more correct
 
 #Dependencies
 import os
@@ -19,11 +20,11 @@ import argparse
 
 class CalcCUB:
     """
-    Returns the Effective Number of Codons used (observed and expected)
+    Returns the Effective Number of Codons (ENc) used (observed and expected)
     following the equations originally from Wright 1990.
     """
     def expWrightENc(gc3):
-        # Calculates the expected ENc from a sequence's GC3 under Wright 1990
+        # Calculates the expected ENc from a sequence's GC3 (GC3S) under Wright 1990
         if gc3 > 1:
             # If GC3 looks as though it is > 1 (e.g. 100%), converts to a float ≤ 1.
             # Calculations expect a value between 0 and 1
@@ -32,7 +33,7 @@ class CalcCUB:
         return round(exp_enc, 4)
 
     def nullENcGC3():
-        # Calculates the expected ENc from the null distribution of GC3
+        # Calculates the expected ENc from the null distribution of GC3S
         # values (0, 100% GC)
         null = [CalcCUB.expWrightENc(n) for n in np.arange(0,.51,0.01)]
         null += null[:-1][::-1]
