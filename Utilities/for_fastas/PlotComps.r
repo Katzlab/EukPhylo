@@ -27,7 +27,7 @@ enc_null <- data.frame(read_tsv('ENc.Null.tsv'))
 #you need as.numeric to ensure R is reading the variable correctly
 gc3_plot <- ggplot(gc3, aes(as.numeric(GC3.Degen), as.numeric(ObsWrightENc_No6Fold)))+
   geom_point(size = 0.1)+
-  geom_line(data = enc_null, aes(GC3, ENc))+
+  geom_line(data = enc_null, aes(GC3S, ENc))+
   theme_classic()+
   labs(x = 'GC3 Degen', y = 'ObsWrightENc_No6fold')+
   theme(legend.position = 'none')+
