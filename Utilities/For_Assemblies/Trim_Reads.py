@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-#Author, date: Giulia Magri Ribeiro updated from Xyrus Maurer-Alcala and Ying Yan; June 11 2025
+#Author, date: Giulia Magri Ribeiroand Adri K. Grow updated from Xyrus Maurer-Alcala and Ying Yan; June 13 2025
 #Motivation: Trim adaptors from reads and quality trimming before Assembly
 #Intent: clean up reads
 #Dependencies: biopython and bbmap folder
-#Inputs:parameters.txt, fastq.gz forward and reverse reads
+#Inputs: parameters.txt, fastq.gz forward and reverse reads
 #Outputs:trimmed reads in ToAssemble folder
-#Example: python3 Trim_Reads.py parameter.txt YourEmailAddress
+#Example: python3 Trim_Reads.py parameter.txt
 
 
 from Bio import SeqIO
@@ -18,22 +18,22 @@ import time
 if len(sys.argv) == 1:
 	print ('\n\nThis script will remove Adapters, do quality trimming and length trimming on given score and assembly from your raw reads')
 	print ('\n\nChecking the overall quality and reads size on FastQC is recommended\n\n')
-	print ('Example Usage:\n\n\t' + 'katzlab$ python3 Trim_Reads.py parameter.txt YourEmailAddress\n\n')
+	print ('Example Usage:\n\n\t' + 'katzlab$ python3 Trim_Reads.py parameter.txt\n\n')
 	print ('\t\tQuestions/Comments? Email Giulia (author) at gribeiro@smith.edu\n\n')
 	sys.exit()
 
 
-if len(sys.argv) != 3:
+elif len(sys.argv) != 2:
 	print ('\n\nDouble check that you have added all the necessary command-line inputs! (see usage below for an example)\n\n')
-	print  ('Example Usage:\n\n\t' + 'katzlab$ python3 Trim_Reads.py parameter.txt YourEmailAddress\n\n')	
-	print ('Please also check that you have a parameter.txt (tab separated values) file which should contain your current filename, new filename, score of quality trimming and minimum length (see an example below)\n\n')
+	print  ('Example Usage:\n\n\t' + 'katzlab$ python3 Trim_Reads.py parameter.txt\n\n')	
+	print ('Please also check that you have a parameter.txt (tab separated values) file which should contain your current filename, new filename, score of quality trimming, and minimum length (see an example below)\n\n')
 	print  ('parameter.txt example:\n\n\t' + 'XKATZ_20161110_K00134_IL100076423_S41_L005\tLKH001_Spirostomum\t24\t100\n\tXKATZ_20161110_K00134_IL100076416_S17_L005\tLKH002_Loxodes\t28\t100\n')
 	sys.exit()
 
-elif len(sys.argv) == 3:
+else:
 	parameter_file = sys.argv[1]
-	mailaddress = sys.argv[2]
-	if os.path.isdir('ToAssemble/') != True:	
+	mailaddress = 'your_email@xxx.edu'  # default email
+	if not os.path.isdir('ToAssemble/'):
 		os.system('mkdir ToAssemble')
 	
 ### takes your downloaded data and renames the file so that it has taxonomic information in the filename
@@ -41,22 +41,20 @@ def rename(code):
 	for filename in os.listdir(os.curdir):
 		if filename.endswith('.fastq.gz'):
 		### check name code here for forward reads
-			if '_1.' in filename:
-				cur_name = filename.split('_1.')[0]
-				new_name = code[cur_name]
-				print(cur_name, new_name)
-				os.system('mv ' + filename + ' ' + new_name + '_FwdPE.fastq.gz')
-### Make a folder for each taxon that you are doing an assembly for ... this will be useful later (might as well do it early on!)				
-				os.system('mkdir '+ new_name)
-		### check name code here for Reverse reads
-			elif '_2.' in filename:
-				cur_name2 = filename.split('_2.')[0]
-				new_name2 = code[cur_name2]
-				print(cur_name2, new_name2)
-				os.system('mv ' + filename + ' ' + new_name2 + '_RevPE.fastq.gz')
-			elif '_FwdPE.fastq.gz' in filename:
-				sample_prefix = filename.split('_FwdPE')[0]
-				os.system(f"mkdir -p {sample_prefix}")
+			if '_FwdPE' in filename or '_R1' in filename:
+				cur_name = filename.split('_FwdPE')[0] if '_FwdPE' in filename else filename.split('_R1')[0]
+				if cur_name in code:
+					new_name = code[cur_name]
+					print(cur_name, new_name)
+					os.system(f'mv {filename} {new_name}_FwdPE.fastq.gz')
+					os.system(f'mkdir -p {new_name}')
+		### check name code here for reverse reads
+			elif '_RevPE' in filename or '_R2' in filename:
+				cur_name = filename.split('_RevPE')[0] if '_RevPE' in filename else filename.split('_R2')[0]
+				if cur_name in code:
+					new_name = code[cur_name]
+					print(cur_name, new_name)
+					os.system(f'mv {filename} {new_name}_RevPE.fastq.gz')
 
 
 ### Uses the adapters.fa file in the bbtools resources folder (and BBDuK) to remove adapter sequences -- update if necessary
@@ -73,11 +71,11 @@ def QualityTrim(qtrim, minlen):
 			
 
 ### Calls on rnaSPAdes to do the transcriptome assembly on the quality trimmed files.				
-def rnaSPAdesAssembly():
-	for filename in os.listdir(os.curdir+'/ToAssemble'):						
+#def rnaSPAdesAssembly():
+#	for filename in os.listdir(os.curdir+'/ToAssemble'):						
 #		if 'LKH' in filename:
-		if 'FPE_q' in filename:
-			os.system('python rnaSPAdes-0.1.1/bin/rnaspades.py -m 26 -k 21,33,55,77 --min-complete-transcript 300 -1 ToAssemble/' + filename + ' -2 ToAssemble/' + filename.replace('FPE','RPE')+' -o ' + filename.split('_FPE')[0] + '/; echo "Finished assembling ' + filename.split('_FPE')[0] + '" | mail -s "Finished Transcriptome Assembly ' + (time.strftime("%d/%m/%y")) + '" ' + mailaddress) > out.txt
+#		if 'FPE_q' in filename:
+#			os.system('python rnaSPAdes-0.1.1/bin/rnaspades.py -m 26 -k 21,33,55,77 --min-complete-transcript 300 -1 ToAssemble/' + filename + ' -2 ToAssemble/' + filename.replace('FPE','RPE')+' -o ' + filename.split('_FPE')[0] + '/; echo "Finished assembling ' + filename.split('_FPE')[0] + '" | mail -s "Finished Transcriptome Assembly ' + (time.strftime("%d/%m/%y")) + '" ' + mailaddress) > out.txt
 	
 
 def main():
