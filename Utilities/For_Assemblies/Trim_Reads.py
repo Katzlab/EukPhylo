@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#Author, date: Giulia Magri Ribeiroand Adri K. Grow updated from Xyrus Maurer-Alcala and Ying Yan; June 13 2025
+#Author, date: Giulia Magri Ribeiro and Adri K. Grow updated from Xyrus Maurer-Alcala and Ying Yan; June 13 2025
 #Motivation: Trim adaptors from reads and quality trimming before Assembly
 #Intent: clean up reads
 #Dependencies: biopython and bbmap folder
