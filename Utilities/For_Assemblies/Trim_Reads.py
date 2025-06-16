@@ -7,6 +7,7 @@
 #Inputs: parameters.txt, fastq.gz forward and reverse reads
 #Outputs:trimmed reads in ToAssemble folder
 #Example: python3 Trim_Reads.py parameter.txt
+#Katzlab parameters are 24 for quality trimming and 75 for minimum length as of June 2025
 
 
 from Bio import SeqIO
