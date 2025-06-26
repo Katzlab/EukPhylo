@@ -37,26 +37,34 @@ else:
 	if not os.path.isdir('ToAssemble/'):
 		os.system('mkdir ToAssemble')
 	
-### takes your downloaded data and renames the file so that it has taxonomic information in the filename
+### takes your raw read data and renames the files with your assigned new names and alters the end to either FwdPE or RevPE
 def rename(code):
 	for filename in os.listdir(os.curdir):
 		if filename.endswith('.fastq.gz'):
-		### check name code here for forward reads
-			if '_FwdPE' in filename or '_R1' in filename:
-				cur_name = filename.split('_FwdPE')[0] if '_FwdPE' in filename else filename.split('_R1')[0]
+			# Forward read patterns
+			forward_tags = ['_FwdPE', '_R1', '_FPE']
+			if any(tag in filename for tag in forward_tags):
+				for tag in forward_tags:
+					if tag in filename:
+						cur_name = filename.split(tag)[0]
+						break
 				if cur_name in code:
 					new_name = code[cur_name]
 					print(cur_name, new_name)
 					os.system(f'mv {filename} {new_name}_FwdPE.fastq.gz')
 					os.system(f'mkdir -p {new_name}')
-		### check name code here for reverse reads
-			elif '_RevPE' in filename or '_R2' in filename:
-				cur_name = filename.split('_RevPE')[0] if '_RevPE' in filename else filename.split('_R2')[0]
+			
+			# Reverse read patterns
+			reverse_tags = ['_RevPE', '_R2', '_RPE']
+			if any(tag in filename for tag in reverse_tags):
+				for tag in reverse_tags:
+					if tag in filename:
+						cur_name = filename.split(tag)[0]
+						break
 				if cur_name in code:
 					new_name = code[cur_name]
 					print(cur_name, new_name)
 					os.system(f'mv {filename} {new_name}_RevPE.fastq.gz')
-
 
 ### Uses the adapters.fa file in the bbtools resources folder (and BBDuK) to remove adapter sequences -- update if necessary
 ### Uses BBDuK to quality trim reads so the average is q24 and the min length is 100 -- adjust if needed ... flags will be added eventually			
