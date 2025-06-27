@@ -12,8 +12,10 @@
 #SBATCH --output=EukPhylo.%j.out # Stdout (%j expands to jobId)
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --ntasks-per-node=64 # #change to number of srun when running multiple instances
+#SBATCH --ntasks-per-node=64 # #change to double number of srun when running multiple instances
 #SBATCH --mem=160G
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=email@email.edu
 
 module purge       #Cleans up any loaded modules
 module load slurm
