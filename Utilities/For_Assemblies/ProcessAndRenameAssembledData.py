@@ -1,7 +1,7 @@
 '''
 Author & Date: Adri K. Grow + ChatGPT, Nov 11th 2024
     - Updated 02/13/25 to accept either transcriptome and genome assembled data in command line
-Motivation: assess and rename assembled transcript or genome files for PTL6p1 (or EPv1p1)
+Motivation: assess and rename assembled transcript or genome files for use in EukPhylo Part 1
 Intention: warn if any 'transcripts.fasta' or 'contigs.fasta' files are missing or empty for an LKH, otherwise rename and copy them with their assigned 10-digit code by LKH
 Input:
     - a base directory containing subdirectories for each LKH assembled file, named 'WTA_LKH<xxxx>' or 'WGA_LKH<xxxx>', each containing a 'transcripts.fasta' or 'contigs.fasta' file
