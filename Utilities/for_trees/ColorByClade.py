@@ -151,7 +151,7 @@ def reroot(tree):
 		return best_clade
 
 	#Get the biggest clade for each taxonomic group (stops once it finds one)
-	for taxon in [('Ba', 'Za'), ('Op'), ('Pl'), ('Am'), ('Ex'), ('Sr')]:
+	for taxon in [('Ba'), ('Za'), ('Op'), ('Pl'), ('Am'), ('Ex'), ('Sr')]:
 		clade = get_best_clade(taxon)
 		
 		if len([leaf for leaf in clade if leaf.name[:2] in taxon]) > 3:
