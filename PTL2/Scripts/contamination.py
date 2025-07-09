@@ -480,10 +480,5 @@ def run(params):
 			os.system('rm -r ' + params.output + '/Output/Intermediate/RAxML/*')
 		
 
-			#if 'iqtree' in params.cl_tree_method:
-				#os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
-			#elif params.cl_tree_method == 'raxml':
-				#os.system('rm -r ' + params.output + '/Output/Intermediate/RAxML/*')
 
-			#trees.run(params)
 
