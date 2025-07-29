@@ -5,6 +5,7 @@
 ## the Slurm workload manager. It also includes several example run commands, which correspond to examples explained in more detail in the 
 ## EukPhylo Wiki (https://github.com/Katzlab/EukPhylo/wiki/EukPhylo-Part-2:-MSAs,-trees,-and-contamination-loop).
 ## These run commands can also be copied and run in the terminal / command line separately, without a shell script.
+## For the contamination loop, We recommend iterating the sister/subsisters loop multiple times as branches will shift. In contrast, we recommend only running clade grabbing once
 
 
 ## SLURM-SPECIFIC SETUP BELOW
