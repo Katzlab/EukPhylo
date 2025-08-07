@@ -186,7 +186,7 @@ def run(params):
 				os.system('Scripts/trimal-trimAl/source/trimal -in ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.postGuidance_preTrimAl_aligned.fasta -out ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.70gapTrimmed.fasta -gapthreshold ' + str(params.trimal_cutoff) + ' -fasta')
 
 				#Copying over final aligments (pre and post gap trimming) into output folder.
-				os.system('cp ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.95gapTrimmed.fasta ' + params.output + '/Output/Guidance/' + file.split('.')[0].split('_preguidance')[0] + '.95gapTrimmed.fasta')
+				os.system('cp ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.70gapTrimmed.fasta ' + params.output + '/Output/Guidance/' + file.split('.')[0].split('_preguidance')[0] + '.70gapTrimmed.fasta')
 				os.system('cp ' + tax_guidance_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.postGuidance_preTrimAl_aligned.fasta ' + params.output + '/Output/NotGapTrimmed/' + file.split('.')[0].split('_preguidance')[0] + '.postGuidance_preTrimAl_aligned.fasta')
 				
 				#Removing intermediate files if not --keep_temp
@@ -202,6 +202,7 @@ def run(params):
 
 		guidance_removed_file.close()
 		return True
+
 
 
 
