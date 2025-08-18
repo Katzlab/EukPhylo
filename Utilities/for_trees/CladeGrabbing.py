@@ -18,7 +18,7 @@ def get_args():
 
 	parser = argparse.ArgumentParser(
 		prog = 'Clade grabber, Version 2.1',
-		description = "Updated Aug 1st, 2023 by Auden Cote-L'Heureux, modified by GA Feb 13th 2024"
+		description = "Updated Aug 1st, 2023 by Auden Cote-L'Heureux, modified by AKG Aug 18th 2025"
 	)
 #add_argument section with parameters explained
 	parser.add_argument('-i', '--input', type = str, required = True, help = 'Path to a folder containing input trees (which must have the file extension .tre, .tree, .treefile, or .nex)')
