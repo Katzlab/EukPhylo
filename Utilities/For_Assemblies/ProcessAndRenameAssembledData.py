@@ -4,7 +4,7 @@ Author & Date: Adri K. Grow + ChatGPT, Nov 11th 2024
 Motivation: assess and rename assembled transcript or genome files for use in EukPhylo Part 1
 Intention: warn if any 'transcripts.fasta' or 'contigs.fasta' files are missing or empty for an LKH, otherwise rename and copy them with their assigned 10-digit code by LKH
 Input:
-    - a base directory containing subdirectories for each LKH assembled file, named 'WTA_LKH<xxxx>' or 'WGA_LKH<xxxx>', each containing a 'transcripts.fasta' or 'contigs.fasta' file
+    - a base directory containing subdirectories for each LKH, named either 'WTA_LKH<xxxx>' or 'WGA_LKH<xxxx>', each containing a 'transcripts.fasta' or 'contigs.fasta' file
     - a mapping .txt file with LKH#s tab-separated with corresponding 10-digit codes
 Output: 
     - a folder named 'renamed_transcripts|contigs' with assembled files now named by 10-digit codes; e.g. "Sr_rh_Ro04_assembledTranscripts.fasta"
@@ -83,3 +83,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
