@@ -32,6 +32,7 @@ for x in folder:
 			#EDIT the name of the index and the name of the trimmed reads folder in the first command below (line 33) if necessary
 			os.system("hisat2 -x Foram_Index -1 TrimmedReads/" +FPE+ " -2 TrimmedReads/" +RPE+ " -S sample.sam") 
 			os.system("samtools view -bS sample.sam > sample.bam")
+			os.remove("sample.sam")
 			os.system("samtools fixmate -O bam sample.bam  fixmate_sample.bam")
 			os.system("samtools sort -O bam -o sorted_sample.bam fixmate_sample.bam")
 			os.system("sambamba markdup -r sorted_sample.bam sorted_sample.dedup.bam")
