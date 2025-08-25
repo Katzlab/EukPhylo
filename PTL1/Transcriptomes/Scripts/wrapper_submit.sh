@@ -37,10 +37,10 @@ module load VSEARCH/2.22.1-GCC-11.3.0
 module purge       #Cleans up any loaded modules
 module use /gridapps/modules/all
 module load conda/latest
-conda activate hook_env
 module load uri/main
 module load diamond/2.1.7
 module load VSEARCH/2.22.1-GCC-11.3.0
+conda activate hook_env
 
 parent='/Your/Home/Folder/'
 
