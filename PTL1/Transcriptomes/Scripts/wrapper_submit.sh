@@ -6,6 +6,8 @@
 ## needs and restrictions, followed by some example commands taken from the GitHub Wiki, more detail for which can be found
 ## here: https://github.com/Katzlab/EukPhylo/wiki/EukPhylo-Part-1:-GF-assignment
 
+## SLURM-SPECIFIC SETUP BELOW
+
 ############### FOR SMITH GRID HPC ############### (DELETE section if not applicable):
 ## Slurm specific code
 #SBATCH --job-name=EukPhylo
@@ -42,9 +44,10 @@ module load diamond/2.1.7
 module load VSEARCH/2.22.1-GCC-11.3.0
 conda activate /work/pi_lkatz_smith_edu/Conda_PTL6p1
 
+## PROVIDE YOUR PARENT PATH
 parent='/Your/Home/Folder/'
 
-## Example commands
+## EXAMPLE RUN COMMANDS BELOW
 
 # A simple run that goes from script 1 to script 7 (the last script) using the Universal genetic code
 srun -D ${parent}Scripts python3 ${parent}Scripts/wrapper.py --first_script 1 --last_script 7 --assembled_transcripts ${parent}AssembledTranscripts -o ${parent}Out --genetic_code ${parent}Gcode.txt --databases ${parent}Databases > log.out
