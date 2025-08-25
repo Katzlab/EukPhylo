@@ -9,7 +9,7 @@
 
 ## SLURM-SPECIFIC SETUP BELOW
 
-############# UMass HPC (Unity) requirements below ##################### (DELETE section if not applicable):
+############### FOR UMASS UNITY HPC ############### (DELETE section if not applicable):
 #SBATCH --job-name=EukPhylo
 #SBATCH -n 10 # Number of Cores per Task
 #SBATCH --mem=125G # Requested Memory
@@ -26,7 +26,7 @@ module load mafft/7.505
 module load diamond/2.1.7
 conda activate /work/pi_lkatz_smith_edu/Conda_PTL6p2/envs/PTL/
 
-############# Smith HPC (Grid) requirements below ##################### (DELETE section if not applicable):
+############### FOR SMITH GRID HPC ############### (DELETE section if not applicable):
 #SBATCH --job-name=EukPhylo # Job name
 #SBATCH --output=Run_EukPhylo.%j.out # Stdout (%j expands to jobId)
 #SBATCH --nodes=1
@@ -49,7 +49,7 @@ module load Guidance_mid #Smith College HPC specific
 export PATH=$PATH:/beegfs/fast/katzlab/grid_phylotol_setup/programs/standard-RAxML-master #Smith College HPC specific #export PATH=$PATH:/Path/To/Executable/Files
 
 
-## Provide your parent path
+## PROVIDE YOUR PARENT PATH
 parent='/Your/Home/Folder/' # The folder where you are running EukPhylo (this should contain the Scripts and input data folders)
 
 ## EXAMPLE RUN COMMANDS BELOW
