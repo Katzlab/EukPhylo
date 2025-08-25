@@ -19,6 +19,15 @@
 #SBATCH --mail-user=email@xxx.edu ##add your email address for job updates
 
 module purge       #Cleans up any loaded modules
+#Unity server
+module use /gridapps/modules/all
+module load conda/latest
+conda activate hook_env
+module load uri/main
+module load diamond/2.1.7
+module load VSEARCH/2.22.1-GCC-11.3.0
+
+#Grid server
 module load slurm
 module load tqdm/4.62.3-GCCcore-11.2.0
 module load Biopython/1.79-foss-2021b
