@@ -40,7 +40,7 @@ module load conda/latest
 module load uri/main
 module load diamond/2.1.7
 module load VSEARCH/2.22.1-GCC-11.3.0
-conda activate hook_env
+conda activate /work/pi_lkatz_smith_edu/hook_env
 
 parent='/Your/Home/Folder/'
 
