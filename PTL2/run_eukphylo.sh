@@ -46,10 +46,10 @@ module load IQ-TREE/2.1.2-gompi-2021b
 module load tqdm/4.64.1-GCCcore-12.2.0
 module load Python/3.9.6-GCCcore-11.2.0
 module load Guidance_mid #Smith College HPC specific
+export PATH=$PATH:/beegfs/fast/katzlab/grid_phylotol_setup/programs/standard-RAxML-master #Smith College HPC specific #export PATH=$PATH:/Path/To/Executable/Files
 
-#export PATH=$PATH:/Path/To/Executable/Files
-export PATH=$PATH:/beegfs/fast/katzlab/grid_phylotol_setup/programs/standard-RAxML-master #Smith College HPC specific
 
+## Provide your parent path
 parent='/Your/Home/Folder/' # The folder where you are running EukPhylo (this should contain the Scripts and input data folders)
 
 ## EXAMPLE RUN COMMANDS BELOW
