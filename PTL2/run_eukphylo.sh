@@ -7,22 +7,32 @@
 ## These run commands can also be copied and run in the terminal / command line separately, without a shell script.
 ## For the contamination loop, We recommend iterating the sister/subsisters loop multiple times as branches will shift. In contrast, we recommend only running clade grabbing once
 
-
 ## SLURM-SPECIFIC SETUP BELOW
 
+############# UMass HPC (Unity) requirements below ##################### (DELETE section if not applicable):
+#SBATCH --job-name=EukPhylo
+#SBATCH -n 10 # Number of Cores per Task
+#SBATCH --mem=125G # Requested Memory
+#SBATCH -p cpu # Partition
+#SBATCH -q long # long QOS
+#SBATCH -t 334:00:00 # Job time limit
+#SBATCH --output=Run_EP.%A_%a.out # Stdout (%j expands to jobId)
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=email@email.edu
+#SBATCH --array=1-600%50
+module purge       #Cleans up any loaded modules
+module load conda/latest
+module load mafft/7.505
+module load diamond/2.1.7
+conda activate /work/pi_lkatz_smith_edu/Conda_PTL6p2/envs/PTL/
+
+############# Smith HPC (Grid) requirements below ##################### (DELETE section if not applicable):
 #SBATCH --job-name=EukPhylo # Job name
 #SBATCH --output=Run_EukPhylo.%j.out # Stdout (%j expands to jobId)
 #SBATCH --nodes=1
 #SBATCH --ntasks=10 ## On the Smith College HPC (Grid), we have to change this to be double the number of task/batches you want to launch
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=email@xxx.edu ##add your email address for job updates
-
-## UMass HPC (Unity) requirements below (DELETE section if not applicable):
-#SBATCH --mem=125G # Requested Memory
-#SBATCH -c 24 # Number of Cores per Task
-#SBATCH -q long # Partition
-#SBATCH -t 336:00:00 # Job time limit
-
+#SBATCH --mail-user=email@email.edu ##add your email address for job updates
 #Load required modules
 module purge       #Cleans up any loaded modules
 module use /gridapps/modules/all    #make sure module locations is loaded
@@ -37,8 +47,8 @@ module load tqdm/4.64.1-GCCcore-12.2.0
 module load Python/3.9.6-GCCcore-11.2.0
 module load Guidance_mid #Smith College HPC specific
 
-export PATH=$PATH:/beegfs/fast/katzlab/grid_phylotol_setup/programs/standard-RAxML-master #Smith College HPC specific
 #export PATH=$PATH:/Path/To/Executable/Files
+export PATH=$PATH:/beegfs/fast/katzlab/grid_phylotol_setup/programs/standard-RAxML-master #Smith College HPC specific
 
 parent='/Your/Home/Folder/' # The folder where you are running EukPhylo (this should contain the Scripts and input data folders)
 
