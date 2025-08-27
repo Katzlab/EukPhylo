@@ -7,6 +7,7 @@
 #Inputs: Folder named 'TrimmedReads' containing all the trimmed reads
 #Outputs: Folders with the names of the LKHs containing the sam/bam files
 #Example: python ReadMapping.py
+#IMPORTANT: Lines 34-42 manipulate the .bam files in several different ways including converting .sam to .bam, sorting, optional deduplicating, optional quality filtering, and retaining only mapped reads. It is the responsibility of the user to determine exactly which commands are needed.
 '''
 
 import os
@@ -30,15 +31,15 @@ for x in folder:
 		if FPE.split("_FPE")[0] == RPE.split("_RPE")[0]: # Match sample IDs dynamically 
 			#The next few lines are several HISAT commands that will create new files
 			#EDIT the name of the index and the name of the trimmed reads folder in the first command below (line 33) if necessary
-			os.system("hisat2 -x Foram_Index -1 TrimmedReads/" +FPE+ " -2 TrimmedReads/" +RPE+ " -S sample.sam") 
-			os.system("samtools view -bS sample.sam > sample.bam")
-			os.remove("sample.sam")
-			os.system("samtools fixmate -O bam sample.bam  fixmate_sample.bam")
-			os.system("samtools sort -O bam -o sorted_sample.bam fixmate_sample.bam")
-			os.system("sambamba markdup -r sorted_sample.bam sorted_sample.dedup.bam")
-			os.system("samtools view -h -b -q 40 sorted_sample.dedup.bam > sorted_sample.q40.bam")
-			os.system("samtools view -h -b -q 20 sorted_sample.dedup.bam > sorted_sample.q20.bam")
-			os.system("samtools view -h -F 4 -b sorted_sample.dedup.bam > defaultparameters_sample.bam")
+			os.system("hisat2 -x Ms15_Index -1 TrimmedReads/" +FPE+ " -2 TrimmedReads/" +RPE+ " -S sample.sam") 
+			os.system("samtools view -bS sample.sam > sample.bam") #converts .sam file to .bam file
+			os.remove("sample.sam") #delete the .sam file as they are not needed after converting to .bam and are too big to store
+			#os.system("samtools fixmate -O bam sample.bam  fixmate_sample.bam") #use this command if you will be using the sambamba markdup command to remove duplicates
+			os.system("samtools sort -O bam -o sorted_sample.bam sample.bam") #sorts the .bam file alignments by leftmost coordinates
+			#os.system("sambamba markdup -r sorted_sample.bam sorted_sample.dedup.bam") #removes duplicate reads - may not be appropriate for your study or protocols, user will need to determine if this is best practice for their study
+			#os.system("samtools view -h -b -q 40 sorted_sample.dedup.bam > sorted_sample.q40.bam") #only keeps reads with mapping quality ≥ 40, input is the dedup file but can easily be modified to use the sorted .bam file
+			#os.system("samtools view -h -b -q 20 sorted_sample.dedup.bam > sorted_sample.q20.bam") #only keeps reads with mapping quality ≥ 20, input is the dedup file but can easily be modified to use the sorted .bam file
+			os.system("samtools view -h -F 4 -b sorted_sample.bam > sorted_mapped_sample.bam") #only keeps mapped reads, using the sorted .bam file as input - this is the Katzlab transcriptomic final output that should be used for continued analyses
 
 			if not os.path.isdir(sample_id):
 				os.mkdir(sample_id) #making folders with the names of the LKHs
