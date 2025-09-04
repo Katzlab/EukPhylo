@@ -19,12 +19,13 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=email@xxx.edu ##add your email address for job updates
 module purge       #Cleans up any loaded modules
+module use /gridapps/modules/all
 module load slurm
-module load tqdm/4.62.3-GCCcore-11.2.0
-module load Biopython/1.79-foss-2021b
-module load BLAST+/2.12.0-gompi-2021b
-module load DIAMOND/2.0.13-GCC-11.2.0
-module load VSEARCH/2.22.1-GCC-11.3.0
+module load tqdm/4.66.1-GCCcore-12.3.0
+module load Biopython/1.79-gfbf-2023a
+module load BLAST+/2.14.1-gompi-2023a
+module load DIAMOND/2.1.8-GCC-12.3.0
+module load VSEARCH/2.25.0-GCC-12.3.0
 
 ############### FOR UMASS UNITY HPC ############### (DELETE section if not applicable):
 ## Slurm specific code
