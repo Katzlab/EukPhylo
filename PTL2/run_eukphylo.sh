@@ -38,12 +38,12 @@ module purge       #Cleans up any loaded modules
 module use /gridapps/modules/all    #make sure module locations is loaded
 module load slurm
 module load ETE
-module load Biopython/1.79-foss-2021b
-module load DIAMOND/2.0.13-GCC-11.2.0
+module load Biopython/1.79-gfbf-2023a
+module load DIAMOND/2.1.8-GCC-12.3.0
 module load MAFFT
 module load RAxML
 module load IQ-TREE/2.1.2-gompi-2021b
-module load tqdm/4.64.1-GCCcore-12.2.0
+module load tqdm/4.66.1-GCCcore-12.3.0
 module load Python/3.9.6-GCCcore-11.2.0
 module load Guidance_mid #Smith College HPC specific
 export PATH=$PATH:/beegfs/fast/katzlab/grid_phylotol_setup/programs/standard-RAxML-master #Smith College HPC specific #export PATH=$PATH:/Path/To/Executable/Files
