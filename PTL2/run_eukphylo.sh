@@ -1,5 +1,5 @@
 #!/bin/bash
-## Last updated Jan 2025 by Auden Cote-L'Heureux; modified Feb 2025 by Adri K. Grow
+## Last updated Jan 2025 by Auden Cote-L'Heureux; modified Sept. 2025 by Adri K. Grow
 
 ## This shell script is used for running EukPhylo part 2, and includes a general setup for use on an HPC that uses 
 ## the Slurm workload manager. It also includes several example run commands, which correspond to examples explained in more detail in the 
