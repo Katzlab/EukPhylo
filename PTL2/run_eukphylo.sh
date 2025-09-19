@@ -34,18 +34,18 @@ conda activate /work/pi_lkatz_smith_edu/Conda_PTL6p2/envs/PTL/
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=email@email.edu ##add your email address for job updates
 #Load required modules
-module purge       #Cleans up any loaded modules
-module use /gridapps/modules/all    #make sure module locations is loaded
+module purge # Cleans up any loaded modules
+module use /gridapps/modules/all # make sure module locations is loaded
 module load slurm
-module load ETE-3.1.3-foss-2024a
+module load ETE/3.1.3-foss-2024a
 module load Biopython/1.79-gfbf-2023a
 module load DIAMOND/2.1.8-GCC-12.3.0
-module load MAFFT-7.526-GCC-13.3.0
-module load RAxML-NG-1.2.2-GCC-13.2.0
-module load IQ-TREE-2.3.6-gompi-2023a
+module load MAFFT/7.526-GCC-13.3.0-with-extensions
+module load RAxML-NG/1.2.2-GCC-13.2.0
+module load IQ-TREE/2.3.6-gompi-2023a
 module load tqdm/4.66.1-GCCcore-12.3.0
-module load Python/3.9.6-GCCcore-11.2.0
-module load Guidance_mid #Smith College HPC specific
+module load Python/3.12.3-GCCcore-13.3.0
+module load Guidance_mid/2.1b-foss-2023a #Smith College HPC specific
 export PATH=$PATH:/beegfs/fast/katzlab/grid_phylotol_setup/programs/standard-RAxML-master #Smith College HPC specific #export PATH=$PATH:/Path/To/Executable/Files
 
 
