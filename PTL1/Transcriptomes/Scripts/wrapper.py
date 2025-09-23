@@ -92,7 +92,7 @@ def script_four(args):
 	if os.path.exists(args.databases + '/Taxa_with_few_sequences.txt'):
 		with open(args.databases + '/Taxa_with_few_sequences.txt', 'r') as f:
 			content = f.read()
-			print(f'These samples do not run through PTL6p1, perhaps because they has no good hits to the hook. We suggest you remove them and restart.')
+			print(f'These samples did not run through EukPhylo part1 either because they have no good hits to the hook database or Diamond sequence aligner ran out of memory. We suggest you remove them and restart.')
 			print(content)
 			print('Stopping Run.')
 		os.remove(args.databases + '/Taxa_with_few_sequences.txt')
