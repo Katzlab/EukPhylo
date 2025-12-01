@@ -18,7 +18,7 @@
 #SBATCH -t 334:00:00 # Job time limit
 #SBATCH --output=Run_EP.%A_%a.out # Stdout (%j expands to jobId)
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=email@email.edu
+#SBATCH --mail-user=email@smith.edu
 #SBATCH --array=1-600%50
 module purge       #Cleans up any loaded modules
 module load conda/latest
@@ -32,7 +32,7 @@ conda activate /work/pi_lkatz_smith_edu/Conda_PTL6p2/envs/PTL/
 #SBATCH --nodes=1
 #SBATCH --ntasks=10 ## On the Smith College HPC (Grid), we have to change this to be double the number of task/batches you want to launch
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=email@email.edu ##add your email address for job updates
+#SBATCH --mail-user=email@smith.edu ##add your email address for job updates
 #Load required modules
 module purge # Cleans up any loaded modules
 module use /gridapps/modules/all # make sure module locations is loaded
