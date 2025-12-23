@@ -85,7 +85,7 @@ figtree_format = '''begin figtree;
 	set tipLabels.colorAttribute="User selection";
 	set tipLabels.displayAttribute="Names";
 	set tipLabels.fontName="sansserif";
-	set tipLabels.fontSize=16;
+	set tipLabels.fontSize=10;
 	set tipLabels.fontStyle=0;
 	set tipLabels.isShown=true;
 	set tipLabels.significantDigits=4;
@@ -267,7 +267,7 @@ def color(file, args):
 			leaf_colors.append(leaf.name)
 	
 	with open('ColoredTrees/' + file.split('/')[-1].split('.tree')[0] + '.tree', 'w') as o:
-		write_lines(o, newick, leaf_colors, str(12))#change tree font size here (right now it is 12)
+		write_lines(o, newick, leaf_colors, str(12))#change tree font size here (right now it is 11)
 
 if __name__ == '__main__':
 
