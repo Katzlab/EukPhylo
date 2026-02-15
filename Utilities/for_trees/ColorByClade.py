@@ -4,8 +4,8 @@
 #Dependencies: Python3, ete3
 #Inputs: A folder of trees
 #Outputs: a folder of colored trees
-#Example: python ColorByClade_v2.1.py -i /path/to/trees
-#Example: python ColorByClade_v2.1.py -i /path/to/trees -k keys.txt
+#Example: python ColorByClade.py -i /path/to/trees
+#Example: python ColorByClade.py -i /path/to/trees -k keys.txt
 #NOTE: turn off rooting at lines 227-229 if you want colored unrooted trees
 
 
