@@ -1,4 +1,4 @@
-#Author, date: Xyrus (last modified by him Sept 17 2020), most recently updated by Auden on October 17 2024
+#Author, date: Xyrus (last modified by him Sept 17 2020), most recently updated by Auden on October 17 2024 and by Ozan on March 27 2026
 #Motivation: Generate lots of codon usage statistics to aid in identifying useful characteristics for de novo ORF calling
 #Intent: Summarize nucleotide composition statistics for a fasta file or folder of fasta files
 #Dependencies: Python3, numpy, BioPython
@@ -7,6 +7,8 @@
 #Example: python3 CUB.py -i seqs.fasta 
 #Note: Use "python3 CUB.py -i seqs.fasta --require_start --require_stop" to see more conservative estimate
 #Note: in this script we use GC3 and GC3S interchangeably, though the abbreviation GC3S is probably more correct
+#Note: The biopython function "GC" is replaced with "gc_fraction" in version 1.80+. When running with newer biopython versions
+#Note: comment lines 31 and 34 and uncomment lines 21,348,353,359-360,366-367,372,380 (comment previous lines for biopython <1.79)
 
 #Dependencies
 import os
@@ -15,7 +17,8 @@ import sys
 import numpy as np
 from Bio import SeqIO
 from Bio.Seq import Seq
-from Bio.SeqUtils import GC
+from Bio.SeqUtils import GC #For biopython 1.79 or earlier
+#from Bio.SeqUtils import gc_fraction #For biopython 1.80+
 import argparse
 
 class CalcCUB:
@@ -25,10 +28,10 @@ class CalcCUB:
     """
     def expWrightENc(gc3):
         # Calculates the expected ENc from a sequence's GC3 (GC3S) under Wright 1990
-        if gc3 > 1:
+        if gc3 > 1: #Comment this line for biopython 1.80+
             # If GC3 looks as though it is > 1 (e.g. 100%), converts to a float ≤ 1.
             # Calculations expect a value between 0 and 1
-            gc3 = gc3/100
+            gc3 = gc3/100 #Comment this line for biopython 1.80+
         exp_enc = 2+gc3+(29/((gc3**2)+(1-gc3)**2))
         return round(exp_enc, 4)
 
@@ -341,34 +344,40 @@ class GCeval():
     """
     def gcTotal(seq):
         # This function returns global GC content
-        return round(GC(seq), 4)
+        return round(GC(seq), 4) #For biopython 1.79 or earlier
+        #return round(gc_fraction(seq)*100, 4) #For biopython 1.80+
 
     def gc1(seq):
         # This function return the GC content of the first position of a codon
-        return round(GC(''.join([seq[n] for n in range(0, len(seq), 3)])), 4)
+        return round(GC(''.join([seq[n] for n in range(0, len(seq), 3)])), 4) #For biopython 1.79 or earlier
+        #return round(gc_fraction(''.join([seq[n] for n in range(0, len(seq), 3)]))*100, 4) #For biopython 1.80+
 
     def gc2(seq):
         # This function return the GC content of the second position of a codon
         return round(GC(''.join([seq[n] for n in
-            range(1, len(seq)-len(seq[1:]) % 3, 3)])), 4)
+            range(1, len(seq)-len(seq[1:]) % 3, 3)])), 4) #For biopython 1.79 or earlier
+        #return round(gc_fraction(''.join([seq[n] for n in
+            #range(1, len(seq)-len(seq[1:]) % 3, 3)]))*100, 4) #For biopython 1.80+
 
     def gc3(seq):
         # This function return the GC content of the third position of a codon
         return round(GC(''.join([seq[n] for n in
-            range(2, len(seq)-len(seq[2:]) % 3, 3)])), 4)
+            range(2, len(seq)-len(seq[2:]) % 3, 3)])), 4) #For biopython 1.79 or earlier
+        #return round(gc_fraction(''.join([seq[n] for n in
+            #range(2, len(seq)-len(seq[2:]) % 3, 3)]))*100, 4) #For biopython 1.80+
 
     def gc3s(cdnTbl):
         # This function return the GC content of the third position of a codon excluding Tryp and Met
-        syn = round(GC(''.join([k[-1]*v[-1] for k, v in cdnTbl.items() if v[0] != 'W' and v[0] != 'M'])), 4)
-        
+        syn = round(GC(''.join([k[-1]*v[-1] for k, v in cdnTbl.items() if v[0] != 'W' and v[0] != 'M'])), 4) #For biopython 1.79 or earlier
+        #syn = round(gc_fraction(''.join([k[-1]*v[-1] for k, v in cdnTbl.items() if v[0] != 'W' and v[0] != 'M']))*100, 4) #For biopython 1.80+
         return syn
 
     def gc3_4F(cdnTbl):
     #     # This function return the GC content of the third position of four-fold
     #     # degenerate codons
 
-        FrFold = round(GC(''.join([k[-1]*v[-1] for k, v in cdnTbl.items() if v[1] == 'four'])), 4)
-        
+        FrFold = round(GC(''.join([k[-1]*v[-1] for k, v in cdnTbl.items() if v[1] == 'four'])), 4) #For biopython 1.79 or earlier
+        #FrFold = round(gc_fraction(''.join([k[-1]*v[-1] for k, v in cdnTbl.items() if v[1] == 'four']))*100, 4) #For biopython 1.80+
         return FrFold
 
 class SeqInfo(object):
