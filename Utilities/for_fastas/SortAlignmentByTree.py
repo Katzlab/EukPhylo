@@ -1,4 +1,4 @@
-#Author, date: Ozan and Claude, March 31 2026
+#Author, date: Written by Claude and modified by Ozan, March 31 2026
 #Motivation: Sorts a multiple sequence alignment (FASTA) so that the order of sequences matches the top-to-bottom tip order of an input phylogenetic tree (Newick or Nexus format).
 #Dependencies: Python3, BioPython
 #Inputs: A fasta file to be sorted and a tree file to be used as a reference
@@ -22,7 +22,6 @@ from Bio.Phylo.BaseTree import Tree
 # ---------------------------------------------------------------------------
 
 def get_args():
-    """Parse and return command-line arguments."""
 
     parser = argparse.ArgumentParser(
         description=(
