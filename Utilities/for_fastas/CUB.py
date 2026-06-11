@@ -9,6 +9,7 @@
 #Note: in this script we use GC3 and GC3S interchangeably, though the abbreviation GC3S is probably more correct
 #Note: The biopython function "GC" is replaced with "gc_fraction" in version 1.80+. When running with newer biopython versions
 #Note: comment lines 31 and 34 and uncomment lines 21,348,353,359-360,366-367,372,380 (comment previous lines for biopython <1.79)
+#Note: GC3S is for all synonymous codons while GC3-Degen is for only four fold families.
 
 #Dependencies
 import os
