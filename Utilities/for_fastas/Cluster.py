@@ -18,7 +18,7 @@ def input_validation(value, error_message):
         value = float(value)
         if value == 1.0:
             return value
-        integer, fractional = str(value).split('.')
+        integer, fractional = f"{value:.2f}".split('.')
         if int(integer) == 0 and len(fractional) == 2:
             return value
     except ValueError:
