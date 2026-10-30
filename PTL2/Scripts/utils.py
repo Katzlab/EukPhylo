@@ -86,7 +86,7 @@ def clean_up(params):
 	#If an output folder already exists at the given path and not running in force mode, stop.
 	elif os.path.isdir(params.output + '/Output') and params.force == False:
 		print('\nAn "Output" folder already exists at the given path. Please delete or rename this folder and try again.\n')
-		exit()
+		sys.exit(1)
 	#If running in force mode, delete any existing output.
 	elif params.force and len([d for d in os.listdir(params.output + '/Output') if d != '.DS_Store']) > 0:
 		print('\nAn "Output" folder already exists at the given path, but all contents were deleted in --force mode.\n')
