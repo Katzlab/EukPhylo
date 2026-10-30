@@ -20,6 +20,7 @@
 import os, sys
 from Bio import SeqIO
 import ete3
+from ete3.coretype.tree import TreeError
 import argparse
 from tqdm import tqdm
 
@@ -113,8 +114,8 @@ def remove_paralogs(params):
 
 			try:
 				tree = reroot(tree)
-			except:
-				print('\nUnable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Skipping this step and continuing to try to grab robust clades from the tree.\n')					
+			except TreeError as e:
+				print('\nUnable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Reason: ' + str(e) + '. Skipping this step and continuing to try to grab robust clades from the tree.\n')
 
 			#Getting a clean list of all target taxa
 
@@ -271,7 +272,7 @@ def run(params):
 	
 	if not os.path.isdir(params.output + '/Output/Guidance') or not os.path.isdir(params.output + '/Output/Trees'):
 		print('\nERROR in concatenation: cannot find alignments and/or trees (looking in ' + params.output + '/Output/Guidance and ' + params.output + '/Output/Trees)')
-		exit()
+		sys.exit(1)
 	else:
 		seqs_per_og = remove_paralogs(params)
 

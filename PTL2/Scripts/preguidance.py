@@ -35,14 +35,14 @@ def run(params):
 		ogs = list(dict.fromkeys([line.strip() for line in open(params.gf_list)]))
 	except (FileNotFoundError, TypeError) as e:
 		print('\nERROR: Unable to read GF list file. Please make sure that the path is correct and that the file is formatted correctly.\n\n' + str(e) + '\n')
-		exit()
+		sys.exit(1)
 
 	#Reading in the list of taxa to use (--taxon_list)
 	try:
 		taxa = list(dict.fromkeys([line.strip() for line in open(params.taxon_list)]))
 	except (FileNotFoundError, TypeError) as e:
 		print('\nERROR: Unable to read taxon list file. Please make sure that the path is correct and that the file is formatted correctly.\n\n' + str(e) + '\n')
-		exit()
+		sys.exit(1)
 
 	#Reading in the list of taxa to which to apply the similarity filter
 	if params.sim_taxa != None:
@@ -50,7 +50,7 @@ def run(params):
 			sim_taxa = list(dict.fromkeys([line.strip() for line in open(params.sim_taxa)]))
 		except (FileNotFoundError, TypeError) as e:
 			print('\nERROR: Unable to read similarity taxa list file. Please make sure that the path is correct and that the file is formatted correctly.\n\n' + str(e) + '\n')
-			exit()
+			sys.exit(1)
 	else:
 		sim_taxa = 'all'
 
@@ -60,7 +60,7 @@ def run(params):
 			blacklist_seqs = list(dict.fromkeys([line.strip() for line in open(params.blacklist)]))
 		except (FileNotFoundError, TypeError) as e:
 			print('\nERROR: Unable to read blacklist file. Please make sure that the path is correct and that the file is formatted correctly.\n\n' + str(e) + '\n')
-			exit()
+			sys.exit(1)
 	else:
 		blacklist_seqs = []
 
