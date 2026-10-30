@@ -1,0 +1,24 @@
+name: Unit tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}   # login shell, so the conda environment is active in each step
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest          # conda-forge-based conda, no Anaconda "defaults" channel
+          environment-file: dependencies.yml
+          activate-environment: eukphylo-dev
+
+      - name: Run tests
+        run: pytest PTL2/tests -v
