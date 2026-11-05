@@ -86,7 +86,7 @@ def get_subtrees(args, file):
 	try:
 		tree = reroot(tree)
 	except TreeError as e:
-		print('\nUnable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Reason: ' + str(e) + '. Skipping this step and continuing to try to grab robust clades from the tree.\n')
+		print('\nWARNING: Unable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Reason: ' + str(e) + '. Skipping this step and continuing to try to grab robust clades from the tree.\n')
 
 	#Reading in clade grabbing exceptions
 	exceptions = []
@@ -207,7 +207,7 @@ def get_sisters(args, file, sister_contam_per_tax, subsister_contam_per_tax):
 	try:
 		tree = reroot(tree)
 	except TreeError as e:
-		print('\nUnable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Reason: ' + str(e) + '. Skipping this step and continuing with sister-based contamination removal on the tree as it is.\n')
+		print('\nWARNING: Unable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Reason: ' + str(e) + '. Skipping this step and continuing with sister-based contamination removal on the tree as it is.\n')
 
 	mean_bl = mean([leaf.dist for leaf in tree])
 

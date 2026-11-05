@@ -115,7 +115,7 @@ def remove_paralogs(params):
 			try:
 				tree = reroot(tree)
 			except TreeError as e:
-				print('\nUnable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Reason: ' + str(e) + '. Skipping this step and continuing to try to grab robust clades from the tree.\n')
+				print('\nWARNING: Unable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Reason: ' + str(e) + '. Skipping this step and continuing to try to grab robust clades from the tree.\n')
 
 			#Getting a clean list of all target taxa
 
