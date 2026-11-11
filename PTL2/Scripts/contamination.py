@@ -41,10 +41,6 @@ def get_newick(fname):
 
 	return newick
 
-
-#This function reroots the tree on the largest Ba/Za clade. If there is no prokaryote clade,
-#it roots on the largest Op clade, then Pl, then Am, then Ex, then Sr. This rooting reflects
-#on set of views on roots, and a user could replace these rules with their own views.
 def reroot(tree):
 	"""Reroot the tree on the largest clade of a specified taxonomic group.
 
@@ -236,6 +232,20 @@ def get_subtrees(args, file):
 
 #Sisters-based contamination removal
 def get_sisters(args, file, sister_contam_per_tax, subsister_contam_per_tax):
+    """Identify sequences to keep based on sister and sub-sister relationships.
+
+    Apply the specified contamination rules to identify sequences
+    for removal based on their relationships in the gene tree.
+
+    Args:
+        args: Command-line arguments for contamination removal.
+        file (str): Path to the input tree file.
+        sister_contam_per_tax (dict): Sister contamination rules for each taxon.
+        subsister_contam_per_tax (dict): Sub-sister contamination rules for each taxon.
+
+    Returns:
+        list[str]: Names of sequences to keep.
+    """
 
 	seqs2remove = []
 
