@@ -1,18 +1,18 @@
 # Last updated Jan 2025
 # Authors: Auden Cote-L'Heureux, Mario Ceron-Romero.
 
-# This script contains the entirety of the contamination loop, an iterative tool to assess 
-# and remove contamination based on analyses of single gene trees. This tool allows for the 
-# use of one or both of two main methods of contamination assessment informed by tree topology. 
-# The first method – “clade-based contamination removal” –  is intended for cases when the 
-# user is interested in genes present in a group of organisms with multiple representative 
-# samples and/or species in the gene trees. For a given set of target taxa, this method identifies 
+# This script contains the entirety of the contamination loop, an iterative tool to assess
+# and remove contamination based on analyses of single gene trees. This tool allows for the
+# use of one or both of two main methods of contamination assessment informed by tree topology.
+# The first method – “clade-based contamination removal” –  is intended for cases when the
+# user is interested in genes present in a group of organisms with multiple representative
+# samples and/or species in the gene trees. For a given set of target taxa, this method identifies
 # robust, monophyletic clades containing those taxa within each gene tree, and removes all other
-# sequences belonging to the group of target taxa. The second available method is 'sister-based 
-# contamination removal', where sequences are removed based on their sister relationship to 
-# user-specified contaminants. After sequences are removed in each iteration, the loop re-aligns and 
+# sequences belonging to the group of target taxa. The second available method is 'sister-based
+# contamination removal', where sequences are removed based on their sister relationship to
+# user-specified contaminants. After sequences are removed in each iteration, the loop re-aligns and
 # re-builds each tree excluding all removed sequences, and then repeats a specified number of times
-# (--n_loops). Running in botb of these modes requires the user to input several parameters, 
+# (--n_loops). Running in botb of these modes requires the user to input several parameters,
 # which can be found in the manual, and in the 'CL' argument group in utils.py.
 
 #Dependencies
@@ -23,9 +23,16 @@ import guidance
 import trees
 from statistics import mean
 
-#Utility function to extract Newick strings from Nexus files.
 def get_newick(fname):
-	
+	"""Extract the Newick string from a Nexus file.
+
+	Args:
+		fname (str): The path to the Nexus file.
+
+	Returns:
+		str: The Newick string extracted from the file, or an empty string if no Newick string is found.
+	"""
+
 	newick = ''
 	for line in open(fname):
 		line = line.split(' ')[-1]
@@ -34,22 +41,39 @@ def get_newick(fname):
 
 	return newick
 
-
-#This function reroots the tree on the largest Ba/Za clade. If there is no prokaryote clade,
-#it roots on the largest Op clade, then Pl, then Am, then Ex, then Sr. This rooting reflects 
-#on set of views on roots, and a user could replace these rules with their own views.
 def reroot(tree):
+	"""Reroot the tree on the largest clade of a specified taxonomic group.
 
-	#This nested function returns the largest clade of a given taxonomic group
+	Search taxonomic groups in the following order: Ba/Za, Op, Pl, Am, Ex, Sr.
+	Utilize the first group with a qualifying clade as the outgroup. Leave the tree unchanged if none qualifies.
+
+	Args:
+		tree (ete3.TreeNode): The input tree to be rerooted.
+
+	Returns:
+		ete3.TreeNode: The rerooted tree, or the original tree if no suitable clade is found.
+	"""
 	def get_best_clade(taxon):
+		"""Find the largest clade of a given taxonomic group.
 
+		Examine nodes with at least three leaves, excluding those that are subsumed by previously accepted clades.
+		A qualifying clade is one that contains the maximum number of leaves from the specified taxonomic group,
+		while having at most two leaves from other groups.
+
+		Args:
+			taxon (tuple): A tuple of taxonomic group codes (e.g., ('Ba', 'Za')).
+
+		Returns:
+			ete3.TreeNode: The largest qualifying clade of the specified taxonomic group, or an empty list if none is found.
+			Note: The clade is represented as a TreeNode object, not a list of leaf names.
+		"""
 		best_size = 0; best_clade = []; seen_leaves = []
 		#Traverse all nodes
 		for node in tree.traverse('levelorder'):
 			#If the node is big enough and not subsumed by a node we've already accepted
 			if len(node) >= 3 and len(list(set(seen_leaves) & set([leaf.name for leaf in node]))) == 0:
 				leaves = [leaf.name for leaf in node]
-				
+
 				#Create a record of leaves that belong to the taxonomic group
 				target_leaves = set()
 				for leaf in leaves[::-1]:
@@ -74,18 +98,34 @@ def reroot(tree):
 			break
 
 	return tree
-	
-#Clade-based contamination removal
-def get_subtrees(args, file):
 
-	newick = get_newick(file)	
+def get_subtrees(args, file):
+	"""Get the sequences to keep from a tree based on clade grabbing rules.
+
+	Read and reroot a gene tree, then select clades that meet the specified taxonomic requirements
+	and contamination thresholds. A clade is selected if 1) each of its children contains at least
+	one target taxon; 2) it has at least min_target_presence distinct target taxa; 3) it has at least
+	required_taxa_num distinct required taxa; and 4) its number of non-target leaves is at most
+	num_contams (or, if num_contams < 1, at most that fraction of the number of target taxa).
+	Avoid selecting overlapping clades, and retain non-target sequences and those listed as
+	exceptions. Rules come from args.clade_grabbing_rules_file if given, and otherwise from the
+	individual command-line arguments. Exit the program if a rules or exceptions file cannot be found.
+
+	Args:
+		args (argparse.Namespace): Command-line arguments containing clade grabbing rules and exceptions.
+		file (str): Path to the input tree file.
+
+	Returns:
+		list[str]: Names of sequences to keep based on the clade grabbing rules.
+	"""
+	newick = get_newick(file)
 
 	tree = ete3.Tree(newick)
 
 	try:
 		tree = reroot(tree)
 	except:
-		print('\nUnable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Skipping this step and continuing to try to grab robust clades from the tree.\n')					
+		print('\nUnable to re-root the tree ' + file + ' (maybe it had only 1 major clade, or an inconvenient polytomy). Skipping this step and continuing to try to grab robust clades from the tree.\n')
 
 	#Reading in clade grabbing exceptions
 	exceptions = []
@@ -194,8 +234,27 @@ def get_subtrees(args, file):
 
 	return seqs2keep
 
-#Sisters-based contamination removal
 def get_sisters(args, file, sister_contam_per_tax, subsister_contam_per_tax):
+	"""Identify sequences to keep based on sister and sub-sister relationships.
+
+	Read and reroot a gene tree. For each sequence matching a taxon in the rules, move towards
+	the root until reaching a node that contains a leaf from a different taxon (taxa grouped
+	together in args.cocontaminants are treated as one); the other taxa in that node are the
+	sisters. The sub-sisters are the leaves in the next node up that are not in the sister node
+	(only if args.subsister_rules is given). Remove a sequence if 1) all of its sisters are listed
+	as contaminants for its taxon and its branch length is at most the smallest applicable
+	threshold times the mean terminal branch length of the tree; or 2) all of its sub-sisters are listed
+	as contaminants for its taxon. Exit the program if the co-contaminants file cannot be found.
+
+	Args:
+		args (argparse.Namespace): Command-line arguments for contamination removal, including the co-contaminants file and sub-sister rules file.
+		file (str): Path to the input tree file.
+		sister_contam_per_tax (dict): Sister contamination rules for each taxon.
+		subsister_contam_per_tax (dict): Sub-sister contamination rules for each taxon.
+
+	Returns:
+		list[str]: Names of sequences to keep.
+	"""
 
 	seqs2remove = []
 
@@ -285,8 +344,22 @@ def get_sisters(args, file, sister_contam_per_tax, subsister_contam_per_tax):
 
 	return [leaf.name for leaf in tree if leaf.name not in seqs2remove]
 
-#Creating new unaligned file without the removed sequences
 def write_new_preguidance(params, seqs2keep, seqs_per_og, tree_file):
+	"""Write a new unaligned sequence file excluding removed sequences.
+
+	Match the tree file to its corresponding sequence file and write the sequences that should
+	be kept to Output/Pre-Guidance. Also exclude taxa listed in params.cl_exclude_taxa.
+
+	Args:
+		params (argparse.Namespace): Command-line arguments.
+		seqs2keep (list[str]): Names of sequences to keep.
+		seqs_per_og (dict): Sequences grouped by input file, in the form {file name: {sequence name: sequence}}.
+		tree_file (str): Name of the tree file.
+
+	Returns:
+		tuple: The matching sequence file name and a list of removed sequence names.
+		Returns (None, []) if no unique matching sequence file is found.
+	"""
 
 	if params.cl_exclude_taxa != None:
 		try:
@@ -317,55 +390,97 @@ def write_new_preguidance(params, seqs2keep, seqs_per_og, tree_file):
 		return seq_file[0], seqs_removed_from_og
 
 
-#Utility function to run MAFFT in between iterations (if this is the chosen alignment method)
 def cl_mafft(params):
+	"""Run MAFFT on all FASTA files in the Pre-Guidance directory and save the untrimmed alignments to the NotGapTrimmed directory. Then, use trimAl to remove gaps based on the specified gap threshold and save the trimmed alignments to the Guidance directory.
 
+	Args:
+		params (argparse.Namespace): Command-line arguments containing the output directory and trimAl gap threshold (trimal_cutoff).
+	"""
 	for file in os.listdir(params.output + '/Output/Pre-Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			os.system('mafft ' + params.output + '/Output/Pre-Guidance/' + file + ' > ' + params.output + '/Output/NotGapTrimmed/' + file)
 
 			os.system('Scripts/trimal-trimAl/source/trimal -in ' + params.output + '/Output/NotGapTrimmed/' + file + ' -out ' + params.output + '/Output/Guidance/' + file.split('.')[0] + '.70gapTrimmed.fasta' + ' -gapthreshold ' + str(params.trimal_cutoff) + ' -fasta')
 
-#Utility function to run FastTree in between iterations (if this is the chosen tree-building method)
 def cl_fasttree(params):
+	"""Build phylogenetic trees using FastTree.
+
+	Run FastTree on all FASTA files in the Guidance directory and save the resulting trees to the Trees directory,
+	the Output/Trees under the base directory specified by params.output.
+
+	Args:
+		params (argparse.Namespace): Command-line arguments containing the output directory path.
+	"""
 	for file in os.listdir(params.output + '/Output/Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			os.system('FastTree ' + params.output + '/Output/Guidance/' + file + ' > ' + params.output + '/Output/Trees/' + file.split('.')[0] + '.FastTree.tre')
 
 
-#Utility function to run Iqtree in between iterations (if this is the chosen tree-building method)
 def cl_iqtree(params):
+	"""Build phylogenetic trees using IQ-TREE.
+
+	Run Iqtree on all FASTA files in the Guidance directory and save the resulting trees to the Trees directory,
+	the Output/Trees under the base directory specified by params.output.
+
+	Args:
+		params (argparse.Namespace): Command-line arguments containing the output directory path.
+	"""
 	for file in os.listdir(params.output + '/Output/Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			if not os.path.isdir(params.output + '/Output/Intermediate/IQTree'):
 				os.mkdir(params.output + '/Output/Intermediate/IQTree')
 			tax_iqtree_outdir = params.output + '/Output/Intermediate/IQTree/' + file.split('.')[0].split('_preguidance')[0]
 			os.mkdir(tax_iqtree_outdir)
-			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --prefix ' +  tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')	
+			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --prefix ' +  tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
 			#Copy over the final output
 			if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
 				os.system('cp ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile ' + params.output + '/Output/Trees/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.tree')
 	os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
 
-	
-#Utility function to run Iqtree_fast in between iterations (if this is the chosen tree-building method)
+
 def cl_iqtree_fast(params):
+	"""Build phylogenetic trees using IQ-TREE in fast mode.
+
+	Run Iqtree_fast on all FASTA files in the Guidance directory and save the resulting trees to the Trees directory,
+	the Output/Trees under the base directory specified by params.output.
+
+	Args:
+		params (argparse.Namespace): Command-line arguments containing the output directory path.
+	"""
 	for file in os.listdir(params.output + '/Output/Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			if not os.path.isdir(params.output + '/Output/Intermediate/IQTree'):
 				os.mkdir(params.output + '/Output/Intermediate/IQTree')
 			tax_iqtree_outdir = params.output + '/Output/Intermediate/IQTree/' + file.split('.')[0].split('_preguidance')[0]
 			os.mkdir(tax_iqtree_outdir)
-			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --fast --prefix ' +  tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')	
+			os.system('iqtree2 -s ' + params.output + '/Output/Guidance/' + file + ' -m LG+G -T 10 --fast --prefix ' +  tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree')
 			#Copy over the final output
 			if os.path.isfile(tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile'):
 				os.system('cp ' + tax_iqtree_outdir + '/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.treefile ' + params.output + '/Output/Trees/' + file.split('.')[0].split('_preguidance')[0] + '.IQTree.tree')
 	os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
 
 
-#Wrapper script to manage parameters and iteration
 def run(params):
+	"""Run the iterative contamination removal pipeline.
 
+	Repeat the process params.nloops times:
+	1) Read sequence files from Output/Pre-Guidance when starting from raw data, or from params.data otherwise.
+	2) For each tree not yet completed, identify sequences to keep using clade-based (params.contamination_loop == 'clade') or sister-based
+		(params.contamination_loop == 'seq') removal, then write a new unaligned sequence file. Mark the tree as completed when the returned list of removed sequences is empty.
+	3) Record removed sequences and their iteration numbers in params.output/Output/SequencesRemoved_ContaminationLoop.txt.
+	4) Archive the Trees, Guidance, and NotGapTrimmed directories, appending the iteration number to each directory name.
+	5) Re-align sequences using MAFFT or Guidance according to params.cl_alignment_method, then rebuild trees according to params.cl_tree_method.
+
+
+    Args:
+        params (argparse.Namespace): Command-line arguments specifying the number of iterations, contamination removal method, input and
+        	output directories, alignment method, tree-building method, and optional contamination rules.
+
+    Notes:
+        The function modifies params.start, params.end, and params.tree_method during execution to configure the alignment and tree-building steps.
+
+		The function exits if the specified sub-sister rules file cannot be found.
+	"""
 	seqs_removed = []
 	completed_ogs = []
 
@@ -458,7 +573,7 @@ def run(params):
 
 		os.system('mv ' + params.output + '/Output/NotGapTrimmed ' + params.output + '/Output/NotGapTrimmed_' + str(loop))
 		os.mkdir(params.output + '/Output/NotGapTrimmed')
-		
+
 		params.start = 'unaligned'
 		params.end = 'trees'
 		params.tree_method = params.cl_tree_method
@@ -479,7 +594,3 @@ def run(params):
 			os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
 		elif params.cl_tree_method == 'raxml':
 			os.system('rm -r ' + params.output + '/Output/Intermediate/RAxML/*')
-		
-
-
-
