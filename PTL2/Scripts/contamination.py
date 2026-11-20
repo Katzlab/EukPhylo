@@ -64,7 +64,7 @@ def reroot(tree):
 			taxon (tuple): A tuple of taxonomic group codes (e.g., ('Ba', 'Za')).
 
 		Returns:
-			ete3.TreeNode: The largest clade of the specified taxonomic group, or an empty list if none is found.
+			ete3.TreeNode: The largest qualifying clade of the specified taxonomic group, or an empty list if none is found.
 			Note: The clade is represented as a TreeNode object, not a list of leaf names.
 		"""
 		best_size = 0; best_clade = []; seen_leaves = []
@@ -99,7 +99,6 @@ def reroot(tree):
 
 	return tree
 
-#Clade-based contamination removal
 def get_subtrees(args, file):
 	"""Get the sequences to keep from a tree based on clade grabbing rules.
 
@@ -235,15 +234,20 @@ def get_subtrees(args, file):
 
 	return seqs2keep
 
-#Sisters-based contamination removal
 def get_sisters(args, file, sister_contam_per_tax, subsister_contam_per_tax):
 	"""Identify sequences to keep based on sister and sub-sister relationships.
 
-	Read and reroot a gene tree, then remove sequences whose sisters or sub-sisters are
-	listed as contaminants in the contamination rules.
+	Read and reroot a gene tree. For each sequence matching a taxon in the rules, move towards
+	the root until reaching a node that contains a leaf from a different taxon (taxa grouped
+	together in args.cocontaminants are treated as one); the other taxa in that node are the
+	sisters. The sub-sisters are the leaves in the next node up that are not in the sister node
+	(only if args.subsister_rules is given). Remove a sequence if 1) all of its sisters are listed
+	as contaminants for its taxon and its branch length is at most the smallest applicable
+	threshold times the mean terminal branch length of the tree; or 2) all of its sub-sisters are listed
+	as contaminants for its taxon. Exit the program if the co-contaminants file cannot be found.
 
 	Args:
-		args (argparse.Namespace): Command-line arguments for contamination removal.
+		args (argparse.Namespace): Command-line arguments for contamination removal, including the co-contaminants file and sub-sister rules file.
 		file (str): Path to the input tree file.
 		sister_contam_per_tax (dict): Sister contamination rules for each taxon.
 		subsister_contam_per_tax (dict): Sub-sister contamination rules for each taxon.
@@ -387,7 +391,11 @@ def write_new_preguidance(params, seqs2keep, seqs_per_og, tree_file):
 
 
 def cl_mafft(params):
-	"""Run MAFFT on all FASTA files in the Pre-Guidance directory and save the untrimmed alignments to the NotGapTrimmed directory. Then, use trimAl to remove gaps based on the specified gap threshold and save the trimmed alignments to the Guidance directory."""
+	"""Run MAFFT on all FASTA files in the Pre-Guidance directory and save the untrimmed alignments to the NotGapTrimmed directory. Then, use trimAl to remove gaps based on the specified gap threshold and save the trimmed alignments to the Guidance directory.
+
+	Args:
+		params (argparse.Namespace): Command-line arguments containing the output directory and trimAl gap threshold (trimal_cutoff).
+	"""
 	for file in os.listdir(params.output + '/Output/Pre-Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			os.system('mafft ' + params.output + '/Output/Pre-Guidance/' + file + ' > ' + params.output + '/Output/NotGapTrimmed/' + file)
@@ -395,14 +403,28 @@ def cl_mafft(params):
 			os.system('Scripts/trimal-trimAl/source/trimal -in ' + params.output + '/Output/NotGapTrimmed/' + file + ' -out ' + params.output + '/Output/Guidance/' + file.split('.')[0] + '.70gapTrimmed.fasta' + ' -gapthreshold ' + str(params.trimal_cutoff) + ' -fasta')
 
 def cl_fasttree(params):
-	"""Run FastTree on all FASTA files in the Guidance directory and save the resulting trees to the Trees directory."""
+	"""Build phylogenetic trees using FastTree.
+
+	Run FastTree on all FASTA files in the Guidance directory and save the resulting trees to the Trees directory,
+	the Output/Trees under the base directory specified by params.output.
+
+	Args:
+		params (argparse.Namespace): Command-line arguments containing the output directory path.
+	"""
 	for file in os.listdir(params.output + '/Output/Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			os.system('FastTree ' + params.output + '/Output/Guidance/' + file + ' > ' + params.output + '/Output/Trees/' + file.split('.')[0] + '.FastTree.tre')
 
 
 def cl_iqtree(params):
-	"""Run Iqtree on all FASTA files in the Guidance directory and save the resulting trees to the Trees directory."""
+	"""Build phylogenetic trees using IQ-TREE.
+
+	Run Iqtree on all FASTA files in the Guidance directory and save the resulting trees to the Trees directory,
+	the Output/Trees under the base directory specified by params.output.
+
+	Args:
+		params (argparse.Namespace): Command-line arguments containing the output directory path.
+	"""
 	for file in os.listdir(params.output + '/Output/Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			if not os.path.isdir(params.output + '/Output/Intermediate/IQTree'):
@@ -417,7 +439,14 @@ def cl_iqtree(params):
 
 
 def cl_iqtree_fast(params):
-	"""Run Iqtree_fast on all FASTA files in the Guidance directory and save the resulting trees to the Trees directory."""
+	"""Build phylogenetic trees using IQ-TREE in fast mode.
+
+	Run Iqtree_fast on all FASTA files in the Guidance directory and save the resulting trees to the Trees directory,
+	the Output/Trees under the base directory specified by params.output.
+
+	Args:
+		params (argparse.Namespace): Command-line arguments containing the output directory path.
+	"""
 	for file in os.listdir(params.output + '/Output/Guidance'):
 		if file.split('.')[-1] in ('fasta', 'fas', 'faa'):
 			if not os.path.isdir(params.output + '/Output/Intermediate/IQTree'):
@@ -431,24 +460,26 @@ def cl_iqtree_fast(params):
 	os.system('rm -r ' + params.output + '/Output/Intermediate/IQTree/*')
 
 
-#Wrapper script to manage parameters and iteration
 def run(params):
 	"""Run the iterative contamination removal pipeline.
 
-    	Manage multiple rounds of contamination detection and sequence removal using either clade-based or sister-based filtering.
-    	For each iteration, load the input sequences, process eligible phylogenetic trees, and write updated sequence files excluding sequences identified for removal.
+	Repeat the process params.nloops times:
+	1) Read sequence files from Output/Pre-Guidance when starting from raw data, or from params.data otherwise.
+	2) For each tree not yet completed, identify sequences to keep using clade-based (params.contamination_loop == 'clade') or sister-based
+		(params.contamination_loop == 'seq') removal, then write a new unaligned sequence file. Mark the tree as completed when the returned list of removed sequences is empty.
+	3) Record removed sequences and their iteration numbers in params.output/Output/SequencesRemoved_ContaminationLoop.txt.
+	4) Archive the Trees, Guidance, and NotGapTrimmed directories, appending the iteration number to each directory name.
+	5) Re-align sequences using MAFFT or Guidance according to params.cl_alignment_method, then rebuild trees according to params.cl_tree_method.
 
-    	Track removed sequences and completed gene families across iterations.
-		Archive the outputs from each iteration, then realign the retained sequences and reconstruct phylogenetic trees for the next iteration using the specified methods.
 
-    	Args:
-        	params: Command-line arguments specifying the number of iterations, contamination removal method, input and
+    Args:
+        params (argparse.Namespace): Command-line arguments specifying the number of iterations, contamination removal method, input and
         	output directories, alignment method, tree-building method, and optional contamination rules.
 
-    	Notes:
-        	The function modifies params.start, params.end, and params.tree_method during execution to configure the alignment and tree-building steps.
+    Notes:
+        The function modifies params.start, params.end, and params.tree_method during execution to configure the alignment and tree-building steps.
 
-        	Removed sequences are recorded in Output/SequencesRemoved_ContaminationLoop.txt.
+		The function exits if the specified sub-sister rules file cannot be found.
 	"""
 	seqs_removed = []
 	completed_ogs = []
